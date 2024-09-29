@@ -3,6 +3,7 @@ import { authController } from "./auth.controller";
 import { upload } from "../../util/SendImageCloudinary";
 import validateRequest from "../../middleware/validateRequest";
 import { userValidationSchemas } from "../user/user.validation";
+import { authValidations } from "./auth.validation";
 
 const router = Router();
 
@@ -17,6 +18,12 @@ router.post(
   },
   validateRequest(userValidationSchemas.createUserValidationSchema),
   authController.createUser
+);
+
+router.post(
+  "/signin",
+  validateRequest(authValidations.loginValidationSchema),
+  authController.signIn
 );
 
 //

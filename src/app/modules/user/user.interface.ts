@@ -11,3 +11,8 @@ export type TUser = {
   followers: Types.ObjectId[];
   following: Types.ObjectId[];
 };
+
+export type Tlogin = {
+  email: string;
+  password: string;
+};
