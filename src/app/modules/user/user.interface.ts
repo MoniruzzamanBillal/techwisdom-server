@@ -6,7 +6,7 @@ export type TUser = {
   password: string;
   profilePicture?: string;
   isDeleted: boolean;
-  isAdmin: boolean;
+  userRole: string;
   isVerified: boolean;
   followers: Types.ObjectId[];
   following: Types.ObjectId[];

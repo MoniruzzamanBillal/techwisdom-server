@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { model, Schema } from "mongoose";
 import config from "../../config";
 import { TUser } from "./user.interface";
+import { UserRole } from "./user.constant";
 
 const userSchema = new Schema<TUser>(
   {
@@ -25,9 +26,9 @@ const userSchema = new Schema<TUser>(
       type: Boolean,
       default: false,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
+    userRole: {
+      type: String,
+      default: UserRole.user,
     },
     isVerified: {
       type: Boolean,
