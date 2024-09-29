@@ -61,6 +61,13 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// ! send password empty in response
+userSchema.post("save", async function (doc, next) {
+  doc.password = "";
+
+  next();
+});
+
 userSchema.pre("find", async function (next) {
   this.find({ isDeleted: { $ne: true } });
 
