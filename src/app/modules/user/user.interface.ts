@@ -16,3 +16,5 @@ export type Tlogin = {
   email: string;
   password: string;
 };
+
+export type TUserRole = "admin" | "user";

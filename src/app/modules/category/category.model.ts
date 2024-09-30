@@ -6,6 +6,7 @@ const categorySchema = new Schema<TCategory>(
     cName: {
       type: String,
       required: true,
+      unique: true,
     },
     isDeleted: {
       type: Boolean,
