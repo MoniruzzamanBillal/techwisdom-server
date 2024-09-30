@@ -79,6 +79,67 @@ const updateComment = async (payload: Partial<TComment>, id: string) => {
   return result;
 };
 
+// ! deleting a comment
+const deleteCommentFromDb = async (payload: Partial<TComment>, id: string) => {
+  const commentData = await commentModel.findById(id);
+
+  const { postId } = payload;
+
+  const postData = await postModel.findById(postId);
+
+  if (!postData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This post don't exist!!! ");
+  }
+
+  if (postData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This post is deleted!!! ");
+  }
+
+  if (!commentData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This comment don't exist!!! ");
+  }
+
+  if (commentData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This comment is deleted!!! ");
+  }
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const result = await commentModel.findByIdAndUpdate(
+      id,
+      { isDeleted: true },
+      { new: true, session }
+    );
+
+    await postModel.findByIdAndUpdate(
+      postId,
+      {
+        $pull: { comments: id },
+      },
+      { new: true, session }
+    );
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return result;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+
+    throw new Error(error);
+  }
+};
+
 //
 
-export const commentServices = { createCommentInDb, updateComment };
+export const commentServices = {
+  createCommentInDb,
+  updateComment,
+  deleteCommentFromDb,
+};

@@ -19,5 +19,12 @@ router.patch(
   commentController.updateComment
 );
 
+// ! for deleting a comment
+router.patch(
+  "/delete-comment/:id",
+  validateRequest(commentValidations.deleteCommentValidationSchema),
+  commentController.deleteComment
+);
+
 //
 export const commentRouter = router;

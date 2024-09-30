@@ -17,8 +17,16 @@ const updateCommentValidationSchema = z.object({
   }),
 });
 
+// ! delete comment validation schema
+const deleteCommentValidationSchema = z.object({
+  body: z.object({
+    postId: z.string(),
+  }),
+});
+
 //
 export const commentValidations = {
   createCommentValidationSchema,
   updateCommentValidationSchema,
+  deleteCommentValidationSchema,
 };
