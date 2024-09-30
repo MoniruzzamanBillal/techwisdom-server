@@ -14,7 +14,20 @@ const createComment = catchAsync(async (req, res) => {
   });
 });
 
+// ! updating a comment
+const updateComment = catchAsync(async (req, res) => {
+  const result = await commentServices.updateComment(req.body, req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Comment updated successfully!!!!!",
+    data: result,
+  });
+});
+
 //
 export const commentController = {
   createComment,
+  updateComment,
 };

@@ -12,5 +12,12 @@ router.post(
   commentController.createComment
 );
 
+// ! for updating a comment
+router.patch(
+  "/update-comment/:id",
+  validateRequest(commentValidations.updateCommentValidationSchema),
+  commentController.updateComment
+);
+
 //
 export const commentRouter = router;

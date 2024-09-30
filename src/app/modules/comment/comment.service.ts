@@ -60,6 +60,25 @@ const createCommentInDb = async (payload: TComment) => {
   }
 };
 
+// ! updating comment data
+const updateComment = async (payload: Partial<TComment>, id: string) => {
+  const commentData = await commentModel.findById(id);
+
+  if (!commentData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This comment don't exist!!! ");
+  }
+
+  if (commentData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This comment is deleted!!! ");
+  }
+
+  const result = await commentModel.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+
+  return result;
+};
+
 //
 
-export const commentServices = { createCommentInDb };
+export const commentServices = { createCommentInDb, updateComment };

@@ -10,7 +10,15 @@ const createCommentValidationSchema = z.object({
   }),
 });
 
+// ! update comment validation schema
+const updateCommentValidationSchema = z.object({
+  body: z.object({
+    content: z.string().min(1, "Content is required"),
+  }),
+});
+
 //
 export const commentValidations = {
   createCommentValidationSchema,
+  updateCommentValidationSchema,
 };
