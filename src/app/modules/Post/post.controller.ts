@@ -14,6 +14,30 @@ const craetePost = catchAsync(async (req, res) => {
   });
 });
 
+// ! get all  post
+const getAllPost = catchAsync(async (req, res) => {
+  const result = await postServices.getAllPostFromDb();
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Post retrived successfully!!!",
+    data: result,
+  });
+});
+
+// ! get single post
+const getSinglePost = catchAsync(async (req, res) => {
+  const result = await postServices.getSinglePostFromDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Post retrived successfully!!!",
+    data: result,
+  });
+});
+
 // ! update post
 const updatePost = catchAsync(async (req, res) => {
   const result = await postServices.updatePostInDb(req.body, req.params.id);
@@ -26,8 +50,23 @@ const updatePost = catchAsync(async (req, res) => {
   });
 });
 
+// ! delete post
+const deletePost = catchAsync(async (req, res) => {
+  const result = await postServices.deletePostFromDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Post deleted successfully!!!",
+    data: result,
+  });
+});
+
 //
 export const postController = {
   craetePost,
   updatePost,
+  deletePost,
+  getAllPost,
+  getSinglePost,
 };

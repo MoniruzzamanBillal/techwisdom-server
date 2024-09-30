@@ -16,6 +16,7 @@ const getAllCategoryFromDb = async () => {
   return result;
 };
 
+// ! for getting single category
 const getSingleCategoryFromDb = async (id: string) => {
   const categoryData = await categoryModel.findById(id);
 

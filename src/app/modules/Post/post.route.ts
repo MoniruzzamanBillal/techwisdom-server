@@ -7,6 +7,12 @@ import { postController } from "./post.controller";
 
 const router = Router();
 
+// ! for getting all post
+router.get("/all-post", postController.getAllPost);
+
+// ! for getting single post
+router.get("/single-post/:id", postController.getSinglePost);
+
 // ! for creating a post
 router.post(
   "/create-post",
@@ -26,6 +32,9 @@ router.patch(
   validateRequest(postValidationSchemas.updatePostVlidationSchema),
   postController.updatePost
 );
+
+// ! for deleting a post
+router.patch("/delete-post/:id", postController.deletePost);
 
 //
 export const postRouter = router;
