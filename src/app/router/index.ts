@@ -3,6 +3,7 @@ import { testRouter } from "../modules/boilerModule/test.route";
 import { authRouter } from "../modules/auth/auth.route";
 import { categoryRouter } from "../modules/category/category.route";
 import { postRouter } from "../modules/Post/post.route";
+import { commentRouter } from "../modules/comment/comment.route";
 
 const router = Router();
 
@@ -22,6 +23,10 @@ const routeArray = [
   {
     path: "/post",
     route: postRouter,
+  },
+  {
+    path: "/comment",
+    route: commentRouter,
   },
 ];
 

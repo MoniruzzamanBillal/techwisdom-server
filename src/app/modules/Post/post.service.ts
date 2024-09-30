@@ -24,7 +24,8 @@ const getAllPostFromDb = async () => {
   const result = await postModel
     .find()
     .populate("authorId")
-    .populate("category");
+    .populate("category")
+    .populate("comments");
 
   return result;
 };
@@ -34,7 +35,8 @@ const getSinglePostFromDb = async (id: string) => {
   const postData = await postModel
     .findById(id)
     .populate("authorId")
-    .populate("category");
+    .populate("category")
+    .populate("comments");
 
   if (!postData) {
     throw new AppError(httpStatus.BAD_REQUEST, "This post don't exist!!! ");
