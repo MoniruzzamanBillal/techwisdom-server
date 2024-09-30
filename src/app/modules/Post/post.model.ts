@@ -48,11 +48,11 @@ const postSchema = new Schema<TPost>({
 });
 
 postSchema.pre("find", async function (next) {
-  this.find({ isDeleted: { $ne: false } });
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
 postSchema.pre("findOne", async function (next) {
-  this.find({ isDeleted: { $ne: false } });
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
 
