@@ -15,6 +15,30 @@ const createCategory = catchAsync(async (req, res) => {
   });
 });
 
+// ! getting all  category
+const getAllCategory = catchAsync(async (req, res) => {
+  const result = await categoryServices.getAllCategoryFromDb();
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Category retrived successfully !!!",
+    data: result,
+  });
+});
+
+// ! getting specific  category
+const getSingleCategory = catchAsync(async (req, res) => {
+  const result = await categoryServices.getSingleCategoryFromDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Category retrived successfully !!!",
+    data: result,
+  });
+});
+
 // ! update category data
 const updateCategory = catchAsync(async (req, res) => {
   const result = await categoryServices.updateCategoryInDb(
@@ -30,8 +54,23 @@ const updateCategory = catchAsync(async (req, res) => {
   });
 });
 
+// ! delete category data
+const deleteCategory = catchAsync(async (req, res) => {
+  const result = await categoryServices.deleteCategoryInDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Category deleted successfully !!!",
+    data: result,
+  });
+});
+
 //
 export const categoryController = {
   createCategory,
   updateCategory,
+  deleteCategory,
+  getAllCategory,
+  getSingleCategory,
 };

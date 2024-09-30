@@ -7,6 +7,20 @@ import { categoryValidationSchema } from "./category.validation";
 
 const router = Router();
 
+// ! for getting all category
+router.get(
+  "/all-category",
+  auth(UserRole.admin),
+  categoryController.getAllCategory
+);
+
+// ! for getting single category
+router.get(
+  "/single-category/:id",
+  auth(UserRole.admin),
+  categoryController.getSingleCategory
+);
+
 // ! for creating a category
 router.post(
   "/create-category",
@@ -21,6 +35,13 @@ router.patch(
   auth(UserRole.admin),
   validateRequest(categoryValidationSchema.updateCategoryValidationSchema),
   categoryController.updateCategory
+);
+
+// ! for deleting category
+router.patch(
+  "/delete-category/:id",
+  auth(UserRole.admin),
+  categoryController.deleteCategory
 );
 
 //

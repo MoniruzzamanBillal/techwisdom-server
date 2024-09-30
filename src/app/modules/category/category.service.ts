@@ -9,6 +9,27 @@ const createCategoryInDb = async (payload: { cName: string }) => {
   return result;
 };
 
+// ! for getting all category
+const getAllCategoryFromDb = async () => {
+  const result = await categoryModel.find();
+
+  return result;
+};
+
+const getSingleCategoryFromDb = async (id: string) => {
+  const categoryData = await categoryModel.findById(id);
+
+  if (!categoryData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This category don't exist!!! ");
+  }
+
+  if (categoryData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This category is deleted!!! ");
+  }
+
+  return categoryData;
+};
+
 // ! update category in db
 const updateCategoryInDb = async (payload: { cName: string }, id: string) => {
   const categoryData = await categoryModel.findById(id);
@@ -27,8 +48,29 @@ const updateCategoryInDb = async (payload: { cName: string }, id: string) => {
   return categoryData;
 };
 
+// ! delete category in db
+const deleteCategoryInDb = async (id: string) => {
+  const categoryData = await categoryModel.findById(id);
+
+  if (!categoryData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This category don't exist!!! ");
+  }
+
+  if (categoryData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This category is deleted!!! ");
+  }
+
+  categoryData.isDeleted = true;
+  await categoryData.save();
+
+  return categoryData;
+};
+
 //
 export const categoryServices = {
   createCategoryInDb,
   updateCategoryInDb,
+  deleteCategoryInDb,
+  getAllCategoryFromDb,
+  getSingleCategoryFromDb,
 };
