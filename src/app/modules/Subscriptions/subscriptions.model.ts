@@ -8,10 +8,6 @@ const subscriptionsSchema = new Schema<TSubscription>(
       ref: "User",
       required: true,
     },
-    plan: {
-      type: String,
-      required: true,
-    },
 
     status: {
       type: String,

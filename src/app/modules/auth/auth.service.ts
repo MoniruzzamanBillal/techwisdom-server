@@ -13,6 +13,8 @@ const createUserIntoDB = async (payload: Partial<TUser>, file: any) => {
   const name = payload?.name;
   const path = file?.path;
 
+  console.log(file);
+
   const userImgresult = await SendImageCloudinary(path, name as string);
 
   const userImg = userImgresult?.secure_url;

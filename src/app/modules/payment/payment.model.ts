@@ -15,7 +15,7 @@ const paymentSchema = new Schema<TPayment>(
     },
     paymentStatus: {
       type: String,
-      required: true,
+      default: PAYMENTSTATUS.Pending,
     },
     transactionId: {
       type: String,

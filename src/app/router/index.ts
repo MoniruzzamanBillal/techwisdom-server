@@ -4,6 +4,7 @@ import { authRouter } from "../modules/auth/auth.route";
 import { categoryRouter } from "../modules/category/category.route";
 import { postRouter } from "../modules/Post/post.route";
 import { commentRouter } from "../modules/comment/comment.route";
+import { paymentRouter } from "../modules/payment/payment.route";
 
 const router = Router();
 
@@ -27,6 +28,10 @@ const routeArray = [
   {
     path: "/comment",
     route: commentRouter,
+  },
+  {
+    path: "/payment",
+    route: paymentRouter,
   },
 ];
 
