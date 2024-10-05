@@ -4,6 +4,8 @@ import { postValidationSchemas } from "./post.validation";
 
 import { upload } from "../../util/SendImageCloudinary";
 import { postController } from "./post.controller";
+import auth from "../../middleware/auth";
+import { UserRole } from "../user/user.constant";
 
 const router = Router();
 
@@ -16,6 +18,7 @@ router.get("/single-post/:id", postController.getSinglePost);
 // ! for creating a post
 router.post(
   "/create-post",
+  auth(UserRole.admin, UserRole.user),
   upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body?.data);

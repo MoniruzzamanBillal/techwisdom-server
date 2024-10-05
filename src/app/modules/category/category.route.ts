@@ -8,18 +8,10 @@ import { categoryValidationSchema } from "./category.validation";
 const router = Router();
 
 // ! for getting all category
-router.get(
-  "/all-category",
-  auth(UserRole.admin),
-  categoryController.getAllCategory
-);
+router.get("/all-category", categoryController.getAllCategory);
 
 // ! for getting single category
-router.get(
-  "/single-category/:id",
-  auth(UserRole.admin),
-  categoryController.getSingleCategory
-);
+router.get("/single-category/:id", categoryController.getSingleCategory);
 
 // ! for creating a category
 router.post(

@@ -24,7 +24,7 @@ const globalErrorHandler: ErrorRequestHandler = async (
     const simplifiedError = handleCastError(error);
     status = simplifiedError?.statusCode;
     message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
+    errorSources = simplifiedError?.errorSources as TerrorSource;
   }
 
   return res.status(status).json({

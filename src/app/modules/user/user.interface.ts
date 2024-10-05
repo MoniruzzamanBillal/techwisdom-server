@@ -7,6 +7,7 @@ export type TUser = {
   profilePicture?: string;
   isDeleted: boolean;
   userRole: string;
+  status: string;
   isVerified: boolean;
   followers: Types.ObjectId[];
   following: Types.ObjectId[];

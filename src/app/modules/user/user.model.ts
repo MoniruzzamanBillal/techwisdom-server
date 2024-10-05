@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { model, Schema } from "mongoose";
 import config from "../../config";
 import { TUser } from "./user.interface";
-import { UserRole } from "./user.constant";
+import { UserRole, UserStatus } from "./user.constant";
 
 const userSchema = new Schema<TUser>(
   {
@@ -29,6 +29,10 @@ const userSchema = new Schema<TUser>(
     userRole: {
       type: String,
       default: UserRole.user,
+    },
+    status: {
+      type: String,
+      default: UserStatus.active,
     },
     isVerified: {
       type: Boolean,
@@ -73,6 +77,7 @@ userSchema.pre("find", async function (next) {
 
   next();
 });
+
 userSchema.pre("findOne", async function (next) {
   this.find({ isDeleted: { $ne: true } });
 

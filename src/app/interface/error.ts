@@ -8,7 +8,8 @@ export type TerrorMessages = {
 }[];
 
 export type TgenericResponse = {
+  errorSources?: TerrorSource;
   statusCode: number;
   message: string;
-  errorMessages: TerrorMessages;
+  errorMessages?: TerrorMessages;
 };
