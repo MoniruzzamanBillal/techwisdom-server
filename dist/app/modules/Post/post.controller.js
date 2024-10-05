@@ -18,7 +18,6 @@ const sendResponse_1 = __importDefault(require("../../util/sendResponse"));
 const post_service_1 = require("./post.service");
 // ! create post
 const craetePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.file);
     const result = yield post_service_1.postServices.cratePostInDb(req.body, req.file);
     (0, sendResponse_1.default)(res, {
         statusCode: 201,

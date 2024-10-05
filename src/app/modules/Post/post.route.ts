@@ -32,6 +32,11 @@ router.post(
 // ! for updating a post
 router.patch(
   "/update-post/:id",
+  upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body?.data);
+    next();
+  },
   validateRequest(postValidationSchemas.updatePostVlidationSchema),
   postController.updatePost
 );

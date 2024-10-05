@@ -42,6 +42,10 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         default: user_constant_1.UserRole.user,
     },
+    status: {
+        type: String,
+        default: user_constant_1.UserStatus.active,
+    },
     isVerified: {
         type: Boolean,
         default: false,

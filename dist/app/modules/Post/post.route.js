@@ -9,13 +9,15 @@ const validateRequest_1 = __importDefault(require("../../middleware/validateRequ
 const post_validation_1 = require("./post.validation");
 const SendImageCloudinary_1 = require("../../util/SendImageCloudinary");
 const post_controller_1 = require("./post.controller");
+const auth_1 = __importDefault(require("../../middleware/auth"));
+const user_constant_1 = require("../user/user.constant");
 const router = (0, express_1.Router)();
 // ! for getting all post
 router.get("/all-post", post_controller_1.postController.getAllPost);
 // ! for getting single post
 router.get("/single-post/:id", post_controller_1.postController.getSinglePost);
 // ! for creating a post
-router.post("/create-post", SendImageCloudinary_1.upload.single("file"), (req, res, next) => {
+router.post("/create-post", (0, auth_1.default)(user_constant_1.UserRole.admin, user_constant_1.UserRole.user), SendImageCloudinary_1.upload.single("file"), (req, res, next) => {
     var _a;
     req.body = JSON.parse((_a = req.body) === null || _a === void 0 ? void 0 : _a.data);
     next();

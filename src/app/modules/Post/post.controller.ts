@@ -40,7 +40,11 @@ const getSinglePost = catchAsync(async (req, res) => {
 
 // ! update post
 const updatePost = catchAsync(async (req, res) => {
-  const result = await postServices.updatePostInDb(req.body, req.params.id);
+  const result = await postServices.updatePostInDb(
+    req.body,
+    req.file,
+    req.params.id
+  );
 
   sendResponse(res, {
     statusCode: 201,

@@ -55,7 +55,7 @@ const postSchema = new mongoose_1.Schema({
     postImg: {
         type: String,
     },
-});
+}, { timestamps: true });
 postSchema.pre("find", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         this.find({ isDeleted: { $ne: true } });

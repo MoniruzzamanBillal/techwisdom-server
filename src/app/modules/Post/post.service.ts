@@ -36,7 +36,12 @@ const getSinglePostFromDb = async (id: string) => {
     .findById(id)
     .populate("authorId")
     .populate("category")
-    .populate("comments");
+    .populate({
+      path: "comments",
+      populate: {
+        path: "userId",
+      },
+    });
 
   if (!postData) {
     throw new AppError(httpStatus.BAD_REQUEST, "This post don't exist!!! ");
@@ -50,7 +55,18 @@ const getSinglePostFromDb = async (id: string) => {
 };
 
 // ! for updating a post
-const updatePostInDb = async (payload: Partial<TPost>, id: string) => {
+const updatePostInDb = async (
+  payload: Partial<TPost>,
+  file: any,
+  id: string
+) => {
+  const name = payload?.title as string;
+  const path = file?.path;
+
+  const postImgresult = await SendImageCloudinary(path, name);
+
+  const postImg = postImgresult?.secure_url;
+
   const postData = await postModel.findById(id);
 
   if (!postData) {
@@ -61,10 +77,14 @@ const updatePostInDb = async (payload: Partial<TPost>, id: string) => {
     throw new AppError(httpStatus.BAD_REQUEST, "This post is deleted!!! ");
   }
 
-  const result = await postModel.findByIdAndUpdate(id, payload, {
-    new: true,
-    runValidators: true,
-  });
+  const result = await postModel.findByIdAndUpdate(
+    id,
+    { ...payload, postImg },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   return result;
 };
