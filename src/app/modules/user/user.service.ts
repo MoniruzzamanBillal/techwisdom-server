@@ -1,4 +1,5 @@
-import { appendFile } from "fs";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import AppError from "../../Error/AppError";
 import httpStatus from "http-status";
 import { userModel } from "./user.model";
@@ -58,7 +59,7 @@ const followUserFromDb = async (payload: FollowRequest) => {
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    console.log(error);
+    // console.log(error);
 
     throw new Error(error);
   }
@@ -125,14 +126,30 @@ const unfollowUserFromDb = async (payload: UnfollowRequest) => {
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-    console.log(error);
+    // console.log(error);
 
     throw new Error(error);
   }
+};
+
+// ! for getting specific user data
+const getSpecificUserFromDb = async (userId: string) => {
+  const userData = await userModel.findById(userId);
+
+  if (!userData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This post don't exist!!! ");
+  }
+
+  if (userData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This post is deleted!!! ");
+  }
+
+  return userData;
 };
 
 //
 export const userServices = {
   followUserFromDb,
   unfollowUserFromDb,
+  getSpecificUserFromDb,
 };

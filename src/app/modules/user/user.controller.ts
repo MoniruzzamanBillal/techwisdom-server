@@ -26,8 +26,21 @@ const UnfollowUser = catchAsync(async (req, res) => {
   });
 });
 
+// ! for unfollowing user
+const getSpecificUser = catchAsync(async (req, res) => {
+  const result = await userServices.getSpecificUserFromDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User retrived successfully!!!",
+    data: result,
+  });
+});
+
 //
 export const userController = {
   followUser,
   UnfollowUser,
+  getSpecificUser,
 };
