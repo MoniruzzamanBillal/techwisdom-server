@@ -105,20 +105,15 @@ const unfollowUserFromDb = async (payload: UnfollowRequest) => {
 
     // *  Remove followed user's ID from my following list
     followerUser.following = followerUser.following.filter(
-      (id) => id !== followedUserObjectId
+      (id) => !id.equals(followedUserObjectId)
     );
 
     const followerUserIdObject = new mongoose.Types.ObjectId(followerId);
 
-    // console.log(followerUserIdObject);
-    // console.log(followedUserObjectId);
-
     // * Remove my ID from the followed user's followers list
-    followedUser.followers = followedUser.followers.filter((id) => {
-      console.log("in remove following = ", id);
-
-      return id !== followerId;
-    });
+    followedUser.followers = followedUser.followers.filter(
+      (id) => !id.equals(followerUserIdObject)
+    );
 
     await followerUser.save({ session });
     await followedUser.save({ session });
