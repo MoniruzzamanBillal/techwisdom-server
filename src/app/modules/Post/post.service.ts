@@ -3,6 +3,8 @@ import AppError from "../../Error/AppError";
 import { SendImageCloudinary } from "../../util/SendImageCloudinary";
 import { TPost } from "./post.interface";
 import { postModel } from "./post.model";
+import { userModel } from "../user/user.model";
+import mongoose from "mongoose";
 
 // ! for crating a post
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -108,6 +110,13 @@ const deletePostFromDb = async (id: string) => {
   return postData;
 };
 
+// ! for getting user posts
+const getUserPostFromDb = async (userId: string) => {
+  const result = await postModel.find({ authorId: userId });
+
+  return result;
+};
+
 //
 export const postServices = {
   cratePostInDb,
@@ -115,4 +124,5 @@ export const postServices = {
   deletePostFromDb,
   getAllPostFromDb,
   getSinglePostFromDb,
+  getUserPostFromDb,
 };

@@ -12,6 +12,13 @@ const router = Router();
 // ! for getting all post
 router.get("/all-post", postController.getAllPost);
 
+// ! for getting user post
+router.get(
+  "/user-post",
+  auth(UserRole.admin, UserRole.user),
+  postController.getUserPost
+);
+
 // ! for getting single post
 router.get("/single-post/:id", postController.getSinglePost);
 
