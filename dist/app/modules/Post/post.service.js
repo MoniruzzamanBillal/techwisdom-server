@@ -42,7 +42,12 @@ const getSinglePostFromDb = (id) => __awaiter(void 0, void 0, void 0, function* 
         .findById(id)
         .populate("authorId")
         .populate("category")
-        .populate("comments");
+        .populate({
+        path: "comments",
+        populate: {
+            path: "userId",
+        },
+    });
     if (!postData) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This post don't exist!!! ");
     }
@@ -52,7 +57,11 @@ const getSinglePostFromDb = (id) => __awaiter(void 0, void 0, void 0, function* 
     return postData;
 });
 // ! for updating a post
-const updatePostInDb = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
+const updatePostInDb = (payload, file, id) => __awaiter(void 0, void 0, void 0, function* () {
+    const name = payload === null || payload === void 0 ? void 0 : payload.title;
+    const path = file === null || file === void 0 ? void 0 : file.path;
+    const postImgresult = yield (0, SendImageCloudinary_1.SendImageCloudinary)(path, name);
+    const postImg = postImgresult === null || postImgresult === void 0 ? void 0 : postImgresult.secure_url;
     const postData = yield post_model_1.postModel.findById(id);
     if (!postData) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This post don't exist!!! ");
@@ -60,7 +69,7 @@ const updatePostInDb = (payload, id) => __awaiter(void 0, void 0, void 0, functi
     if (postData === null || postData === void 0 ? void 0 : postData.isDeleted) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This post is deleted!!! ");
     }
-    const result = yield post_model_1.postModel.findByIdAndUpdate(id, payload, {
+    const result = yield post_model_1.postModel.findByIdAndUpdate(id, Object.assign(Object.assign({}, payload), { postImg }), {
         new: true,
         runValidators: true,
     });

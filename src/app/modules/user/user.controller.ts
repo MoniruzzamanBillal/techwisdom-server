@@ -1,0 +1,33 @@
+import catchAsync from "../../util/catchAsync";
+import sendResponse from "../../util/sendResponse";
+import { userServices } from "./user.service";
+
+// ! for following user
+const followUser = catchAsync(async (req, res) => {
+  const result = await userServices.followUserFromDb(req.body);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User followed successfully!!!",
+    data: result,
+  });
+});
+
+// ! for unfollowing user
+const UnfollowUser = catchAsync(async (req, res) => {
+  const result = await userServices.unfollowUserFromDb(req.body);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User unfollowed successfully!!!",
+    data: result,
+  });
+});
+
+//
+export const userController = {
+  followUser,
+  UnfollowUser,
+};
