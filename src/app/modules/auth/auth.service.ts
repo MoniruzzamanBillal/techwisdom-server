@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from "http-status";
 import AppError from "../../Error/AppError";
 import { SendImageCloudinary } from "../../util/SendImageCloudinary";
@@ -8,7 +9,7 @@ import { createToken } from "./auth.util";
 import config from "../../config";
 
 // ! create user in database
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const createUserIntoDB = async (payload: Partial<TUser>, file: any) => {
   const name = payload?.name;
   const path = file?.path;
@@ -17,6 +18,24 @@ const createUserIntoDB = async (payload: Partial<TUser>, file: any) => {
 
   const userImg = userImgresult?.secure_url;
 
+  const result = await userModel.create({
+    ...payload,
+    profilePicture: userImg,
+  });
+
+  return result;
+};
+
+// ! create admin
+const createAdminIntoDb = async (payload: Partial<TUser>, file: any) => {
+  const name = payload?.name;
+  const path = file?.path;
+
+  const userImgresult = await SendImageCloudinary(path, name as string);
+
+  const userImg = userImgresult?.secure_url;
+
+ 
   const result = await userModel.create({
     ...payload,
     profilePicture: userImg,
@@ -76,4 +95,5 @@ const signInFromDb = async (payload: Tlogin) => {
 export const authServices = {
   createUserIntoDB,
   signInFromDb,
+  createAdminIntoDb,
 };

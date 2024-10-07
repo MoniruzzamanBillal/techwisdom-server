@@ -14,6 +14,18 @@ const createUser = catchAsync(async (req, res) => {
   });
 });
 
+//  !  create admin user
+const createAdminUser = catchAsync(async (req, res) => {
+  const result = await authServices.createAdminIntoDb(req.body, req.file);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Admin registered successfully ",
+    data: result,
+  });
+});
+
 // ! signin
 const signIn = catchAsync(async (req, res) => {
   const result = await authServices.signInFromDb(req.body);
@@ -46,4 +58,5 @@ const signIn = catchAsync(async (req, res) => {
 export const authController = {
   createUser,
   signIn,
+  createAdminUser,
 };

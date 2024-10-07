@@ -173,7 +173,15 @@ const blockUserFromDb = async (userId: string) => {
 
   userData.save();
 
-  return userData;
+  const result = await userModel.findByIdAndUpdate(
+    userId,
+    { status: UserStatus?.blocked },
+    {
+      new: true,
+    }
+  );
+
+  return result;
 };
 
 // ! for unblocking user data
@@ -188,11 +196,15 @@ const unblockUserFromDb = async (userId: string) => {
     throw new AppError(httpStatus.BAD_REQUEST, "This user is deleted!!! ");
   }
 
-  userData.status = UserStatus?.active;
+  const result = await userModel.findByIdAndUpdate(
+    userId,
+    { status: UserStatus?.active },
+    {
+      new: true,
+    }
+  );
 
-  userData.save();
-
-  return userData;
+  return result;
 };
 
 // ! for deleting user data
@@ -210,11 +222,15 @@ const deleteUserFromDb = async (userId: string) => {
     );
   }
 
-  userData.isDeleted = true;
+  const result = await userModel.findByIdAndUpdate(
+    userId,
+    { isDeleted: true },
+    {
+      new: true,
+    }
+  );
 
-  userData.save();
-
-  return userData;
+  return result;
 };
 
 // ! for getting all admin data

@@ -20,6 +20,19 @@ router.post(
   authController.createUser
 );
 
+// ! for registering an admin user
+router.post(
+  "/admin-register",
+  upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+
+    next();
+  },
+  validateRequest(userValidationSchemas.createAdminUser),
+  authController.createAdminUser
+);
+
 router.post(
   "/signin",
   validateRequest(authValidations.loginValidationSchema),
