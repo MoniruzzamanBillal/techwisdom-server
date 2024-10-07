@@ -50,10 +50,49 @@ const getAllUsers = catchAsync(async (req, res) => {
   });
 });
 
+// ! for blocking a user
+const blockUser = catchAsync(async (req, res) => {
+  const result = await userServices.blockUserFromDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User blocked successfully!!!",
+    data: result,
+  });
+});
+
+// ! for unblocking a user
+const unblockUser = catchAsync(async (req, res) => {
+  const result = await userServices.unblockUserFromDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User unblocked successfully!!!",
+    data: result,
+  });
+});
+
+// ! for unblocking a user
+const deleteUser = catchAsync(async (req, res) => {
+  const result = await userServices.deleteUserFromDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User deleted successfully!!!",
+    data: result,
+  });
+});
+
 //
 export const userController = {
   followUser,
   UnfollowUser,
   getSpecificUser,
   getAllUsers,
+  blockUser,
+  unblockUser,
+  deleteUser,
 };

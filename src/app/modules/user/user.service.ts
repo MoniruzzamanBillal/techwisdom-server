@@ -4,6 +4,7 @@ import AppError from "../../Error/AppError";
 import httpStatus from "http-status";
 import { userModel } from "./user.model";
 import mongoose from "mongoose";
+import { UserStatus } from "./user.constant";
 
 type FollowRequest = {
   followerId: string;
@@ -156,10 +157,73 @@ const getSpecificUserFromDb = async (userId: string) => {
   return userData;
 };
 
+// ! for blocking user data
+const blockUserFromDb = async (userId: string) => {
+  const userData = await userModel.findById(userId);
+
+  if (!userData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This user don't exist!!! ");
+  }
+
+  if (userData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This user is deleted!!! ");
+  }
+
+  userData.status = UserStatus?.blocked;
+
+  userData.save();
+
+  return userData;
+};
+
+// ! for unblocking user data
+const unblockUserFromDb = async (userId: string) => {
+  const userData = await userModel.findById(userId);
+
+  if (!userData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This user don't exist!!! ");
+  }
+
+  if (userData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This user is deleted!!! ");
+  }
+
+  userData.status = UserStatus?.active;
+
+  userData.save();
+
+  return userData;
+};
+
+// ! for deleting user data
+const deleteUserFromDb = async (userId: string) => {
+  const userData = await userModel.findById(userId);
+
+  if (!userData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This user don't exist!!! ");
+  }
+
+  if (userData?.isDeleted) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "This user is already deleted!!! "
+    );
+  }
+
+  userData.isDeleted = true;
+
+  userData.save();
+
+  return userData;
+};
+
 //
 export const userServices = {
   followUserFromDb,
   unfollowUserFromDb,
   getSpecificUserFromDb,
   getAllUsersFromDb,
+  blockUserFromDb,
+  unblockUserFromDb,
+  deleteUserFromDb,
 };
