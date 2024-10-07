@@ -135,7 +135,7 @@ const unfollowUserFromDb = async (payload: UnfollowRequest) => {
 
 // ! for getting all user data
 const getAllUsersFromDb = async () => {
-  const result = await userModel.find();
+  const result = await userModel.find({ userRole: { $ne: "admin" } });
   return result;
 };
 
