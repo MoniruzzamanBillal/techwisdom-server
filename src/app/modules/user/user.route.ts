@@ -4,6 +4,9 @@ import { userController } from "./user.controller";
 
 const router = Router();
 
+// ! for getting all user
+router.get("/all-user", userController.getAllUsers);
+
 // ! for getting specific user
 router.get("/get-user/:id", userController.getSpecificUser);
 

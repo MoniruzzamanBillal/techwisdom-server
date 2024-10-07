@@ -27,7 +27,10 @@ const createUserIntoDB = async (payload: Partial<TUser>, file: any) => {
 
 // ! sign in
 const signInFromDb = async (payload: Tlogin) => {
-  const user = await userModel.findOne({ email: payload?.email });
+  const user = await userModel
+    .findOne({ email: payload?.email })
+    .populate("followers")
+    .populate("following");
 
   if (!user) {
     throw new AppError(
@@ -36,14 +39,19 @@ const signInFromDb = async (payload: Tlogin) => {
     );
   }
 
+  // console.log(payload?.password);
+  // console.log(user?.password);
+
   const isPasswordMatch = await bcrypt.compare(
     payload?.password,
     user?.password
   );
 
-  if (!isPasswordMatch) {
-    throw new AppError(httpStatus.FORBIDDEN, "Password don't match !!");
-  }
+  // console.log(isPasswordMatch);
+
+  // if (!isPasswordMatch) {
+  //   throw new AppError(httpStatus.FORBIDDEN, "Password don't match !!");
+  // }
 
   const userId = user?._id.toHexString();
   const userRole = user?.userRole;

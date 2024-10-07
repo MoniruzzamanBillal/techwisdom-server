@@ -88,6 +88,11 @@ const deletePostFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () 
     yield postData.save();
     return postData;
 });
+// ! for getting user posts
+const getUserPostFromDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.postModel.find({ authorId: userId });
+    return result;
+});
 //
 exports.postServices = {
     cratePostInDb,
@@ -95,4 +100,5 @@ exports.postServices = {
     deletePostFromDb,
     getAllPostFromDb,
     getSinglePostFromDb,
+    getUserPostFromDb,
 };

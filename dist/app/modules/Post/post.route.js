@@ -14,6 +14,8 @@ const user_constant_1 = require("../user/user.constant");
 const router = (0, express_1.Router)();
 // ! for getting all post
 router.get("/all-post", post_controller_1.postController.getAllPost);
+// ! for getting user post
+router.get("/user-post", (0, auth_1.default)(user_constant_1.UserRole.admin, user_constant_1.UserRole.user), post_controller_1.postController.getUserPost);
 // ! for getting single post
 router.get("/single-post/:id", post_controller_1.postController.getSinglePost);
 // ! for creating a post

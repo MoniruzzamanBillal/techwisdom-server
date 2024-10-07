@@ -7,6 +7,7 @@ const category_route_1 = require("../modules/category/category.route");
 const post_route_1 = require("../modules/Post/post.route");
 const comment_route_1 = require("../modules/comment/comment.route");
 const payment_route_1 = require("../modules/payment/payment.route");
+const user_route_1 = require("../modules/user/user.route");
 const router = (0, express_1.Router)();
 const routeArray = [
     {
@@ -28,6 +29,10 @@ const routeArray = [
     {
         path: "/payment",
         route: payment_route_1.paymentRouter,
+    },
+    {
+        path: "/user",
+        route: user_route_1.userRouter,
     },
 ];
 routeArray.forEach((item) => {

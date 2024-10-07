@@ -26,7 +26,7 @@ const UnfollowUser = catchAsync(async (req, res) => {
   });
 });
 
-// ! for unfollowing user
+// ! for getting specific user
 const getSpecificUser = catchAsync(async (req, res) => {
   const result = await userServices.getSpecificUserFromDb(req.params.id);
 
@@ -38,9 +38,22 @@ const getSpecificUser = catchAsync(async (req, res) => {
   });
 });
 
+// ! for unfollowing user
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await userServices.getAllUsersFromDb();
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "All Users retrived successfully!!!",
+    data: result,
+  });
+});
+
 //
 export const userController = {
   followUser,
   UnfollowUser,
   getSpecificUser,
+  getAllUsers,
 };

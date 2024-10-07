@@ -37,6 +37,17 @@ const getAllPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     });
 }));
 // ! get single post
+const getUserPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.user;
+    const result = yield post_service_1.postServices.getUserPostFromDb(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "User Post retrived successfully!!!",
+        data: result,
+    });
+}));
+// ! get single post
 const getSinglePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield post_service_1.postServices.getSinglePostFromDb(req.params.id);
     (0, sendResponse_1.default)(res, {
@@ -73,4 +84,5 @@ exports.postController = {
     deletePost,
     getAllPost,
     getSinglePost,
+    getUserPost,
 };

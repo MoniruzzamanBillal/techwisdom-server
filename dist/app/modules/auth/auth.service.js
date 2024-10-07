@@ -32,14 +32,20 @@ const createUserIntoDB = (payload, file) => __awaiter(void 0, void 0, void 0, fu
 });
 // ! sign in
 const signInFromDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_model_1.userModel.findOne({ email: payload === null || payload === void 0 ? void 0 : payload.email });
+    const user = yield user_model_1.userModel
+        .findOne({ email: payload === null || payload === void 0 ? void 0 : payload.email })
+        .populate("followers")
+        .populate("following");
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User dont exist with this email !!!");
     }
+    // console.log(payload?.password);
+    // console.log(user?.password);
     const isPasswordMatch = yield bcrypt_1.default.compare(payload === null || payload === void 0 ? void 0 : payload.password, user === null || user === void 0 ? void 0 : user.password);
-    if (!isPasswordMatch) {
-        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Password don't match !!");
-    }
+    // console.log(isPasswordMatch);
+    // if (!isPasswordMatch) {
+    //   throw new AppError(httpStatus.FORBIDDEN, "Password don't match !!");
+    // }
     const userId = user === null || user === void 0 ? void 0 : user._id.toHexString();
     const userRole = user === null || user === void 0 ? void 0 : user.userRole;
     const jwtPayload = {

@@ -132,16 +132,25 @@ const unfollowUserFromDb = async (payload: UnfollowRequest) => {
   }
 };
 
+// ! for getting all user data
+const getAllUsersFromDb = async () => {
+  const result = await userModel.find();
+  return result;
+};
+
 // ! for getting specific user data
 const getSpecificUserFromDb = async (userId: string) => {
-  const userData = await userModel.findById(userId);
+  const userData = await userModel
+    .findById(userId)
+    .populate("followers")
+    .populate("following");
 
   if (!userData) {
-    throw new AppError(httpStatus.BAD_REQUEST, "This post don't exist!!! ");
+    throw new AppError(httpStatus.BAD_REQUEST, "This user don't exist!!! ");
   }
 
   if (userData?.isDeleted) {
-    throw new AppError(httpStatus.BAD_REQUEST, "This post is deleted!!! ");
+    throw new AppError(httpStatus.BAD_REQUEST, "This user is deleted!!! ");
   }
 
   return userData;
@@ -152,4 +161,5 @@ export const userServices = {
   followUserFromDb,
   unfollowUserFromDb,
   getSpecificUserFromDb,
+  getAllUsersFromDb,
 };
