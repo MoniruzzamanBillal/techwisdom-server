@@ -1,6 +1,4 @@
 import { Router } from "express";
-import auth from "../../middleware/auth";
-import { UserRole } from "../user/user.constant";
 import { paymentController } from "./payment.controller";
 
 const router = Router();
@@ -8,7 +6,7 @@ const router = Router();
 // ! for payment
 router.post(
   "/procede-payment",
-  auth(UserRole.user, UserRole.admin),
+
   paymentController.procedePayment
 );
 

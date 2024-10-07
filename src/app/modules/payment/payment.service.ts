@@ -16,6 +16,14 @@ const procedePayment = async (payload: TPayment) => {
 
   const userData = await userModel.findById(userId);
 
+  if (!userData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "this user dont exist !!");
+  }
+
+  if (userData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "this user is deleted  !!");
+  }
+
   const { name, email } = userData as TUser;
 
   const paymentData = {

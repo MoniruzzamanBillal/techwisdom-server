@@ -1,6 +1,7 @@
 import catchAsync from "../../util/catchAsync";
 import sendResponse from "../../util/sendResponse";
 import { subscriptionsModel } from "../Subscriptions/subscriptions.model";
+import { userModel } from "../user/user.model";
 import { paymentServices } from "./payment.service";
 
 const redirectURL = "http://localhost:3000";
@@ -31,13 +32,6 @@ const verifyPayment = catchAsync(async (req, res) => {
   const endDate = new Date();
   endDate.setMonth(endDate.getMonth() + 1);
 
-  // const subscriptionData = {
-  //   userId: userId,
-  //   status: "Active",
-  //   startDate: startDate.toISOString(),
-  //   endDate: endDate.toISOString(),
-  // };
-
   const subscriptionData = {
     status: "Active",
     startDate: startDate.toISOString(),
@@ -56,8 +50,14 @@ const verifyPayment = catchAsync(async (req, res) => {
     await subscriptionsModel.create({ userId, ...subscriptionData });
   }
 
+  await userModel.findByIdAndUpdate(
+    userId,
+    { isVerified: true },
+    { new: true }
+  );
+
   if (result) {
-    return res.redirect(`${redirectURL}`);
+    return res.redirect(`${redirectURL}/payment-confirm/${userId}`);
   } else {
     throw new Error("Payment unsuccessfull");
   }
