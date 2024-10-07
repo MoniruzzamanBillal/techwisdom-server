@@ -35,11 +35,32 @@ const createAdminIntoDb = async (payload: Partial<TUser>, file: any) => {
 
   const userImg = userImgresult?.secure_url;
 
- 
   const result = await userModel.create({
     ...payload,
     profilePicture: userImg,
   });
+
+  return result;
+};
+
+// ! update admin
+const updateUser = async (
+  payload: Partial<TUser>,
+  userId: string,
+  file: any
+) => {
+  const name = payload?.name;
+  const path = file?.path;
+
+  const userImgresult = await SendImageCloudinary(path, name as string);
+
+  const userImg = userImgresult?.secure_url;
+
+  const result = await userModel.findByIdAndUpdate(
+    userId,
+    { ...payload, profilePicture: userImg },
+    { new: true }
+  );
 
   return result;
 };
@@ -61,10 +82,10 @@ const signInFromDb = async (payload: Tlogin) => {
   // console.log(payload?.password);
   // console.log(user?.password);
 
-  const isPasswordMatch = await bcrypt.compare(
-    payload?.password,
-    user?.password
-  );
+  // const isPasswordMatch = await bcrypt.compare(
+  //   payload?.password,
+  //   user?.password
+  // );
 
   // console.log(isPasswordMatch);
 
@@ -96,4 +117,5 @@ export const authServices = {
   createUserIntoDB,
   signInFromDb,
   createAdminIntoDb,
+  updateUser,
 };

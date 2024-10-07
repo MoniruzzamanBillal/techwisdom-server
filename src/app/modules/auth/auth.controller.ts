@@ -26,6 +26,22 @@ const createAdminUser = catchAsync(async (req, res) => {
   });
 });
 
+//  !  create admin user
+const updateUser = catchAsync(async (req, res) => {
+  const result = await authServices.updateUser(
+    req.body,
+    req?.params?.id,
+    req.file
+  );
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User  updated successfully ",
+    data: result,
+  });
+});
+
 // ! signin
 const signIn = catchAsync(async (req, res) => {
   const result = await authServices.signInFromDb(req.body);
@@ -59,4 +75,5 @@ export const authController = {
   createUser,
   signIn,
   createAdminUser,
+  updateUser,
 };
