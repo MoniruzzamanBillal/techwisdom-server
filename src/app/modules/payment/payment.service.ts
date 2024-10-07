@@ -53,9 +53,9 @@ const verifyPayment = async (transactionId: string) => {
 
   if (verifyResult && verifyResult?.pay_status === "Successful") {
     await paymentModel.findOneAndUpdate(
-      { trxnNumber: transactionId },
+      { transactionId: transactionId },
       {
-        payment: PAYMENTSTATUS.Completed,
+        paymentStatus: PAYMENTSTATUS.Completed,
       },
       { new: true }
     );
