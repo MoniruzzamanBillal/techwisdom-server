@@ -19,9 +19,6 @@ router.get(
   postController.getUserPost
 );
 
-// ! for getting single post
-router.get("/single-post/:id", postController.getSinglePost);
-
 // ! for creating a post
 router.post(
   "/create-post",
@@ -35,6 +32,15 @@ router.post(
   validateRequest(postValidationSchemas.createPostVlidationSchema),
   postController.craetePost
 );
+
+//! for giving upvotes
+router.patch("/upvote-post", postController.upvotePost);
+
+//! for giving downvotes
+router.patch("/downvote-post", postController.downvotePost);
+
+// ! for getting single post
+router.get("/single-post/:id", postController.getSinglePost);
 
 // ! for updating a post
 router.patch(

@@ -37,6 +37,17 @@ const getSpecificUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
+// ! for getting single user
+const getSingleUser = catchAsync(async (req, res) => {
+  const result = await userServices.getSingleUserFromDb(req.params.id);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User retrived successfully!!!",
+    data: result,
+  });
+});
 
 // ! for unfollowing user
 const getAllUsers = catchAsync(async (req, res) => {
@@ -108,4 +119,5 @@ export const userController = {
   unblockUser,
   deleteUser,
   getAllAdminUsers,
+  getSingleUser,
 };

@@ -3,6 +3,7 @@ import AppError from "../../Error/AppError";
 import { SendImageCloudinary } from "../../util/SendImageCloudinary";
 import { TPost } from "./post.interface";
 import { postModel } from "./post.model";
+import mongoose, { Schema, Types } from "mongoose";
 
 // ! for crating a post
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,6 +116,94 @@ const getUserPostFromDb = async (userId: string) => {
   return result;
 };
 
+type TUpvoteDownvote = {
+  postId: string;
+  userId: string;
+};
+
+// ! for upvoting post
+const upvotePostInDb = async (payload: TUpvoteDownvote) => {
+  const { postId, userId } = payload;
+
+  const post = await postModel.findById(postId);
+
+  if (!post) {
+    throw new Error("Post not found !!!");
+  }
+
+  if (post?.isDeleted) {
+    throw new Error("Post is deleted !!!");
+  }
+
+  // *  Check if the user has already upvoted
+
+  const objectIdUserId = new mongoose.Schema.Types.ObjectId(userId);
+
+  if (
+    post.upvotedBy.some((id) => id.toString() === objectIdUserId.toString())
+  ) {
+    throw new Error("User has already upvoted this post");
+  }
+
+  // Remove from downvotedBy if the user previously downvoted
+  post.downvotedBy = post.downvotedBy.filter(
+    (id) => id.toString() !== objectIdUserId.toString()
+  );
+
+  if (post.downvotes && post.downvotedBy.length < post.downvotes) {
+    post.downvotes -= 1;
+  }
+
+  // Add userId to upvotedBy array and increment upvotes
+  post.upvotedBy.push(objectIdUserId);
+  post.upvotes = (post.upvotes || 0) + 1;
+
+  await post.save();
+  return post;
+};
+
+// ! for downvoting post
+const downvotePostInDb = async (payload: TUpvoteDownvote) => {
+  const { postId, userId } = payload;
+
+  const post = await postModel.findById(postId);
+
+  if (!post) {
+    throw new Error("Post not found !!!");
+  }
+
+  if (post?.isDeleted) {
+    throw new Error("Post is deleted !!!");
+  }
+
+  const objectIdUserId = new mongoose.Schema.Types.ObjectId(userId);
+
+  // Check if the user has already downvoted
+  if (
+    post.downvotedBy.some((id) => id.toString() === objectIdUserId.toString())
+  ) {
+    throw new Error("User has already downvoted this post");
+  }
+
+  // Remove from upvotedBy if the user previously upvoted
+  post.upvotedBy = post.upvotedBy.filter(
+    (id) => id.toString() !== objectIdUserId.toString()
+  );
+
+  // Decrease upvotes if applicable
+  const currentUpvotes = post.upvotes ?? 0;
+  if (post.upvotedBy && post.upvotedBy.length < currentUpvotes) {
+    post.upvotes = currentUpvotes - 1;
+  }
+
+  // Add userId to downvotedBy array and increment downvotes
+  post.downvotedBy.push(objectIdUserId);
+  post.downvotes = (post.downvotes || 0) + 1;
+
+  await post.save();
+  return post;
+};
+
 //
 export const postServices = {
   cratePostInDb,
@@ -123,4 +212,6 @@ export const postServices = {
   getAllPostFromDb,
   getSinglePostFromDb,
   getUserPostFromDb,
+  upvotePostInDb,
+  downvotePostInDb,
 };

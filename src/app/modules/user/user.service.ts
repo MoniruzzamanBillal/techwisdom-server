@@ -157,6 +157,21 @@ const getSpecificUserFromDb = async (userId: string) => {
   return userData;
 };
 
+// ! for getting single user data
+const getSingleUserFromDb = async (userId: string) => {
+  const userData = await userModel.findById(userId);
+
+  if (!userData) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This user don't exist!!! ");
+  }
+
+  if (userData?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "This user is deleted!!! ");
+  }
+
+  return userData;
+};
+
 // ! for blocking user data
 const blockUserFromDb = async (userId: string) => {
   const userData = await userModel.findById(userId);
@@ -249,4 +264,5 @@ export const userServices = {
   unblockUserFromDb,
   deleteUserFromDb,
   getAllAdminUsersFromDb,
+  getSingleUserFromDb,
 };

@@ -6,6 +6,8 @@ export type TPost = {
   authorId: ObjectId;
   category: ObjectId;
   comments: ObjectId[];
+  upvotedBy: ObjectId[];
+  downvotedBy: ObjectId[];
   isPremium: boolean;
   isDeleted?: boolean;
   upvotes?: number;

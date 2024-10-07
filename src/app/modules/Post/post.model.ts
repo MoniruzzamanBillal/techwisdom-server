@@ -27,6 +27,18 @@ const postSchema = new Schema<TPost>(
         ref: "Comment",
       },
     ],
+    upvotedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    downvotedBy: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     isPremium: {
       type: Boolean,
       require: true,

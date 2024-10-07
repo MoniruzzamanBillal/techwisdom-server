@@ -80,6 +80,30 @@ const deletePost = catchAsync(async (req, res) => {
   });
 });
 
+// ! for giving upvotes
+const upvotePost = catchAsync(async (req, res) => {
+  const result = await postServices.upvotePostInDb(req.body);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Post upvoted successfully!!!",
+    data: result,
+  });
+});
+
+// ! for giving downvotes
+const downvotePost = catchAsync(async (req, res) => {
+  const result = await postServices.downvotePostInDb(req.body);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Post downvoted successfully!!!",
+    data: result,
+  });
+});
+
 //
 export const postController = {
   craetePost,
@@ -88,4 +112,6 @@ export const postController = {
   getAllPost,
   getSinglePost,
   getUserPost,
+  upvotePost,
+  downvotePost,
 };

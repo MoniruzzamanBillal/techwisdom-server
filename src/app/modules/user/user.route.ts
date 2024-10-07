@@ -27,6 +27,9 @@ router.patch(
 // ! for getting specific user
 router.get("/get-user/:id", userController.getSpecificUser);
 
+// ! for getting single  user
+router.get("/get-single-user/:id", userController.getSingleUser);
+
 // ! for blocking specific user
 router.patch("/block-user/:id", userController.blockUser);
 
