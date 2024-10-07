@@ -7,6 +7,9 @@ const router = Router();
 // ! for getting all user
 router.get("/all-user", userController.getAllUsers);
 
+// ! for getting all admin user
+router.get("/all-admin-user", userController.getAllAdminUsers);
+
 // ! for following a user
 router.patch(
   "/follow-user",
@@ -30,8 +33,8 @@ router.patch("/block-user/:id", userController.blockUser);
 // ! for unblocking specific user
 router.patch("/unblock-user/:id", userController.unblockUser);
 
-// ! for unblocking specific user
-router.patch("/deleting-user/:id", userController.deleteUser);
+// ! for deleting specific user
+router.patch("/delete-user/:id", userController.deleteUser);
 
 //
 export const userRouter = router;

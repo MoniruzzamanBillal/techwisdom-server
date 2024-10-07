@@ -4,7 +4,7 @@ import AppError from "../../Error/AppError";
 import httpStatus from "http-status";
 import { userModel } from "./user.model";
 import mongoose from "mongoose";
-import { UserStatus } from "./user.constant";
+import { UserRole, UserStatus } from "./user.constant";
 
 type FollowRequest = {
   followerId: string;
@@ -217,6 +217,12 @@ const deleteUserFromDb = async (userId: string) => {
   return userData;
 };
 
+// ! for getting all admin data
+const getAllAdminUsersFromDb = async () => {
+  const result = await userModel.find({ userRole: UserRole?.admin });
+  return result;
+};
+
 //
 export const userServices = {
   followUserFromDb,
@@ -226,4 +232,5 @@ export const userServices = {
   blockUserFromDb,
   unblockUserFromDb,
   deleteUserFromDb,
+  getAllAdminUsersFromDb,
 };

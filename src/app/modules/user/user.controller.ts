@@ -86,6 +86,18 @@ const deleteUser = catchAsync(async (req, res) => {
   });
 });
 
+// ! for getting all admin user
+const getAllAdminUsers = catchAsync(async (req, res) => {
+  const result = await userServices.getAllAdminUsersFromDb();
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "All Admin Users retrived successfully!!!",
+    data: result,
+  });
+});
+
 //
 export const userController = {
   followUser,
@@ -95,4 +107,5 @@ export const userController = {
   blockUser,
   unblockUser,
   deleteUser,
+  getAllAdminUsers,
 };
