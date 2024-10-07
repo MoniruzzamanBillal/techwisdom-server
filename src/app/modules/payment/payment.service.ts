@@ -7,6 +7,7 @@ import { TPayment } from "./payment.interface";
 import { initiatePayment, verifyPay } from "./payment.util";
 import { paymentModel } from "./payment.model";
 import { PAYMENTSTATUS } from "./payment.constant";
+import { subscriptionsModel } from "../Subscriptions/subscriptions.model";
 
 // ! for payment
 const procedePayment = async (payload: TPayment) => {
@@ -72,8 +73,16 @@ const verifyPayment = async (transactionId: string) => {
   return verifyResult;
 };
 
+// ! get specific subscriber data
+const getSubscriberDataFromDb = async (userId: string) => {
+  const result = await subscriptionsModel.findOne({ userId: userId });
+
+  return result;
+};
+
 //
 export const paymentServices = {
   procedePayment,
   verifyPayment,
+  getSubscriberDataFromDb,
 };

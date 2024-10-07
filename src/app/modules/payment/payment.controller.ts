@@ -71,9 +71,22 @@ const cancelPayment = catchAsync(async (req, res) => {
   );
 });
 
+// ! get subscriber data
+const getSubscriberData = catchAsync(async (req, res) => {
+  const result = await paymentServices.getSubscriberDataFromDb(req?.params?.id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Subscriber retrived successfully !!!",
+    data: result,
+  });
+});
+
 //
 export const paymentController = {
   procedePayment,
   verifyPayment,
   cancelPayment,
+  getSubscriberData,
 };
