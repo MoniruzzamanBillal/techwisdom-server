@@ -18,6 +18,8 @@ const AppError_1 = __importDefault(require("../../Error/AppError"));
 const SendImageCloudinary_1 = require("../../util/SendImageCloudinary");
 const post_model_1 = require("./post.model");
 const mongoose_1 = __importDefault(require("mongoose"));
+const Queryuilder_1 = __importDefault(require("../../builder/Queryuilder"));
+const postSearchableFields = ["title", "content"];
 // ! for crating a post
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cratePostInDb = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,13 +31,35 @@ const cratePostInDb = (payload, file) => __awaiter(void 0, void 0, void 0, funct
     return result;
 });
 // ! for getting all post
-const getAllPostFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.postModel
-        .find()
-        .populate("authorId")
-        .populate("category")
-        .populate("comments");
-    return result;
+const getAllPostFromDb = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    // console.log( 'in post services = ' ,  query)
+    let postQueryBuilder;
+    if (query === null || query === void 0 ? void 0 : query.type) {
+        postQueryBuilder = post_model_1.postModel.find({ category: query === null || query === void 0 ? void 0 : query.type }).sort({ upvotes: -1 });
+    }
+    else {
+        postQueryBuilder = post_model_1.postModel.find().sort({ upvotes: -1 });
+    }
+    const postQuery = new Queryuilder_1.default(postQueryBuilder, query).search(postSearchableFields).sort();
+    const resultModified = yield (postQuery === null || postQuery === void 0 ? void 0 : postQuery.queryModel.populate("authorId").populate("category").populate("comments"));
+    // console.log(resultModified)
+    return resultModified;
+});
+// ! for getting user posts
+const getUserPostFromDb = (userId, query) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("in user post = ", query);
+    const userPostQuery = post_model_1.postModel.find({ authorId: userId });
+    let postQueryBuilder;
+    if (query === null || query === void 0 ? void 0 : query.type) {
+        postQueryBuilder = userPostQuery.find({ category: query === null || query === void 0 ? void 0 : query.type }).sort({ upvotes: -1 });
+    }
+    else {
+        postQueryBuilder = userPostQuery.find().sort({ upvotes: -1 });
+    }
+    const postQuery = new Queryuilder_1.default(postQueryBuilder, query).search(postSearchableFields).sort();
+    const resultModified = yield (postQuery === null || postQuery === void 0 ? void 0 : postQuery.queryModel.populate("category"));
+    // const result = await postModel.find({ authorId: userId });
+    return resultModified;
 });
 // ! for getting single category
 const getSinglePostFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -88,11 +112,6 @@ const deletePostFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () 
     postData.isDeleted = true;
     yield postData.save();
     return postData;
-});
-// ! for getting user posts
-const getUserPostFromDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.postModel.find({ authorId: userId });
-    return result;
 });
 // ! for upvoting post
 const upvotePostInDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {

@@ -28,7 +28,7 @@ const craetePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 }));
 // ! get all  post
 const getAllPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_service_1.postServices.getAllPostFromDb();
+    const result = yield post_service_1.postServices.getAllPostFromDb(req === null || req === void 0 ? void 0 : req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: 201,
         success: true,
@@ -39,7 +39,7 @@ const getAllPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 // ! get single post
 const getUserPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
-    const result = yield post_service_1.postServices.getUserPostFromDb(userId);
+    const result = yield post_service_1.postServices.getUserPostFromDb(userId, req === null || req === void 0 ? void 0 : req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: 201,
         success: true,

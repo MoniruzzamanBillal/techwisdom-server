@@ -1,3 +1,4 @@
+import httpStatus from "http-status";
 import catchAsync from "../../util/catchAsync";
 import sendResponse from "../../util/sendResponse";
 import { authServices } from "./auth.service";
@@ -70,10 +71,39 @@ const signIn = catchAsync(async (req, res) => {
   });
 });
 
+
+// !send reset link to mail
+const sendResetLink = catchAsync(async (req, res) => {
+  const result = await authServices.resetMailLink(req?.params?.email);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Reset email sent successfully  ",
+    data: result,
+  });
+});
+
+// ! for reseting password 
+const resetPassWord = catchAsync(async (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const result = await authServices.resetPasswordFromDb(req?.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Password reset successfully  ",
+    data: { message: "success" },
+  });
+});
+
+
+
+
 //
 export const authController = {
   createUser,
   signIn,
   createAdminUser,
-  updateUser,
+  updateUser,sendResetLink ,resetPassWord
 };

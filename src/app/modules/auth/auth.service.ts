@@ -4,9 +4,9 @@ import AppError from "../../Error/AppError";
 import { SendImageCloudinary } from "../../util/SendImageCloudinary";
 import { Tlogin, TUser } from "../user/user.interface";
 import { userModel } from "../user/user.model";
-import bcrypt from "bcrypt";
 import { createToken } from "./auth.util";
 import config from "../../config";
+import { sendEmail } from "../../util/sendEmail";
 
 // ! create user in database
 
@@ -89,9 +89,12 @@ const signInFromDb = async (payload: Tlogin) => {
 
   // console.log(isPasswordMatch);
 
-  // if (!isPasswordMatch) {
-  //   throw new AppError(httpStatus.FORBIDDEN, "Password don't match !!");
-  // }
+
+  
+
+  if ( payload?.password !== user?.password ) {
+    throw new AppError(httpStatus.FORBIDDEN, "Password don't match !!");
+  }
 
   const userId = user?._id.toHexString();
   const userRole = user?.userRole;
@@ -111,11 +114,87 @@ const signInFromDb = async (payload: Tlogin) => {
   //
 };
 
+
+// ! send mail for reseting password
+const resetMailLink = async (email: string) => {
+
+  const findUser = await userModel
+    .findOne({ email })
+    .select(" name email role  ");
+
+   
+
+  if (!findUser) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User don't exist !!");
+  }
+
+  if (findUser?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User is deleted !!");
+  }
+
+  const userId = findUser?._id.toHexString();
+
+  const jwtPayload = {
+    userId,
+    userRole: findUser?.userRole,
+  };
+
+  const token = createToken(jwtPayload, config.jwt_secret as string, "5m");
+
+ 
+
+  // const resetLink = `https://rent-ride-ivory.vercel.app/reset-password/${token}`;
+  const resetLink = `http://localhost:3000/ResetPassword/${token}`;
+
+  const sendMailResponse = await sendEmail(resetLink, email);
+
+
+
+  return sendMailResponse;
+};
+
+
+
+
+
+// ! for reseting password
+const resetPasswordFromDb = async (payload: {
+  userId: string;
+  password: string;
+}) => {
+  const { userId, password } = payload;
+
+  // ! check if  user exist
+  const user = await userModel.findById(userId);
+
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User dont exist !!! ");
+  }
+
+  if (user?.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User is deleted !!");
+  }
+
+  
+  await userModel.findByIdAndUpdate(
+    userId,
+    {
+      password
+    },
+    { new: true }
+  );
+
+  return null;
+};
+
+
+
+
 //
 
 export const authServices = {
   createUserIntoDB,
   signInFromDb,
   createAdminIntoDb,
-  updateUser,
+  updateUser,resetMailLink ,resetPasswordFromDb
 };

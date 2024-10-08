@@ -32,6 +32,25 @@ router.post(
   authController.createAdminUser
 );
 
+
+router.post(
+  "/signin",
+  validateRequest(authValidations.loginValidationSchema),
+  authController.signIn
+);
+
+
+
+// ! for reseting password
+router.patch(
+  "/reset-password",
+ 
+  authController.resetPassWord
+);
+
+
+
+
 // ! for updating user
 router.patch(
   "/user-update/:id",
@@ -44,11 +63,13 @@ router.patch(
   authController.updateUser
 );
 
-router.post(
-  "/signin",
-  validateRequest(authValidations.loginValidationSchema),
-  authController.signIn
-);
+
+// ! for sending reset link to email
+router.patch("/reset-link/:email", authController.sendResetLink);
+
+
+
+
 
 //
 export const authRouter = router;
