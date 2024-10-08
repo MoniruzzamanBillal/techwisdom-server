@@ -71,9 +71,11 @@ const getSubscriberDataFromDb = (userId) => __awaiter(void 0, void 0, void 0, fu
 });
 // ! for getting all payment data
 const getPaymentDataFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield payment_model_1.paymentModel.find({
+    const result = yield payment_model_1.paymentModel
+        .find({
         paymentStatus: payment_constant_1.PAYMENTSTATUS.Completed,
-    });
+    })
+        .populate("userId");
     return result;
 });
 //

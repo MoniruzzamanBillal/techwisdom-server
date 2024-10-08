@@ -82,6 +82,7 @@ const getSubscriberData = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 // ! get all payment data
 const getAllPaymentData = catchAsync(async (req, res) => {
   const result = await paymentServices.getPaymentDataFromDb();
@@ -94,6 +95,18 @@ const getAllPaymentData = catchAsync(async (req, res) => {
   });
 });
 
+// ! get getting payment revenue  data
+const getAllPaymentRevenueData = catchAsync(async (req, res) => {
+  const result = await paymentServices.getPaymentRevenueFromDb();
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "payment revenue data retrived successfully !!!",
+    data: result,
+  });
+});
+
 //
 export const paymentController = {
   procedePayment,
@@ -101,4 +114,5 @@ export const paymentController = {
   cancelPayment,
   getSubscriberData,
   getAllPaymentData,
+  getAllPaymentRevenueData,
 };

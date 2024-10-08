@@ -6,12 +6,11 @@ const router = Router();
 // ! get payment data
 router.get("/payment-data", paymentController.getAllPaymentData);
 
-// ! for payment
-router.post(
-  "/procede-payment",
+// ! get  payment revenue data
+router.get("/payment-revenue", paymentController.getAllPaymentRevenueData);
 
-  paymentController.procedePayment
-);
+// ! for payment
+router.post("/procede-payment", paymentController.procedePayment);
 
 // ! verifying payment
 router.post("/confirmation", paymentController.verifyPayment);

@@ -91,10 +91,27 @@ const getPaymentDataFromDb = async () => {
   return result;
 };
 
+// ! for getting total payment revenue
+const getPaymentRevenueFromDb = async () => {
+  const result = await paymentModel
+    .find({
+      paymentStatus: { $eq: PAYMENTSTATUS.Completed },
+    })
+    .select(" amount ");
+
+  const revenue = result?.reduce((acc, item) => {
+    acc += item?.amount;
+    return acc;
+  }, 0);
+
+  return revenue;
+};
+
 //
 export const paymentServices = {
   procedePayment,
   verifyPayment,
   getSubscriberDataFromDb,
   getPaymentDataFromDb,
+  getPaymentRevenueFromDb,
 };
