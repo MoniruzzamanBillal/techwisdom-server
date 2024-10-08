@@ -31,7 +31,9 @@ const getAllPost = catchAsync(async (req, res) => {
 const getUserPost = catchAsync(async (req, res) => {
   const { userId } = req.user;
 
-  const result = await postServices.getUserPostFromDb(userId);
+  
+
+  const result = await postServices.getUserPostFromDb(userId , req?.query);
 
   sendResponse(res, {
     statusCode: 201,
