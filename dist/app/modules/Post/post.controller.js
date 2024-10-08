@@ -77,6 +77,26 @@ const deletePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+// ! for giving upvotes
+const upvotePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_service_1.postServices.upvotePostInDb(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "Post upvoted successfully!!!",
+        data: result,
+    });
+}));
+// ! for giving downvotes
+const downvotePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_service_1.postServices.downvotePostInDb(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "Post downvoted successfully!!!",
+        data: result,
+    });
+}));
 //
 exports.postController = {
     craetePost,
@@ -85,4 +105,6 @@ exports.postController = {
     getAllPost,
     getSinglePost,
     getUserPost,
+    upvotePost,
+    downvotePost,
 };

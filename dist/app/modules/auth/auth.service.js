@@ -13,21 +13,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authServices = void 0;
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../Error/AppError"));
 const SendImageCloudinary_1 = require("../../util/SendImageCloudinary");
 const user_model_1 = require("../user/user.model");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const auth_util_1 = require("./auth.util");
 const config_1 = __importDefault(require("../../config"));
 // ! create user in database
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createUserIntoDB = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     const name = payload === null || payload === void 0 ? void 0 : payload.name;
     const path = file === null || file === void 0 ? void 0 : file.path;
     const userImgresult = yield (0, SendImageCloudinary_1.SendImageCloudinary)(path, name);
     const userImg = userImgresult === null || userImgresult === void 0 ? void 0 : userImgresult.secure_url;
     const result = yield user_model_1.userModel.create(Object.assign(Object.assign({}, payload), { profilePicture: userImg }));
+    return result;
+});
+// ! create admin
+const createAdminIntoDb = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+    const name = payload === null || payload === void 0 ? void 0 : payload.name;
+    const path = file === null || file === void 0 ? void 0 : file.path;
+    const userImgresult = yield (0, SendImageCloudinary_1.SendImageCloudinary)(path, name);
+    const userImg = userImgresult === null || userImgresult === void 0 ? void 0 : userImgresult.secure_url;
+    const result = yield user_model_1.userModel.create(Object.assign(Object.assign({}, payload), { profilePicture: userImg }));
+    return result;
+});
+// ! update admin
+const updateUser = (payload, userId, file) => __awaiter(void 0, void 0, void 0, function* () {
+    const name = payload === null || payload === void 0 ? void 0 : payload.name;
+    const path = file === null || file === void 0 ? void 0 : file.path;
+    const userImgresult = yield (0, SendImageCloudinary_1.SendImageCloudinary)(path, name);
+    const userImg = userImgresult === null || userImgresult === void 0 ? void 0 : userImgresult.secure_url;
+    const result = yield user_model_1.userModel.findByIdAndUpdate(userId, Object.assign(Object.assign({}, payload), { profilePicture: userImg }), { new: true });
     return result;
 });
 // ! sign in
@@ -41,7 +58,10 @@ const signInFromDb = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     }
     // console.log(payload?.password);
     // console.log(user?.password);
-    const isPasswordMatch = yield bcrypt_1.default.compare(payload === null || payload === void 0 ? void 0 : payload.password, user === null || user === void 0 ? void 0 : user.password);
+    // const isPasswordMatch = await bcrypt.compare(
+    //   payload?.password,
+    //   user?.password
+    // );
     // console.log(isPasswordMatch);
     // if (!isPasswordMatch) {
     //   throw new AppError(httpStatus.FORBIDDEN, "Password don't match !!");
@@ -63,4 +83,6 @@ const signInFromDb = (payload) => __awaiter(void 0, void 0, void 0, function* ()
 exports.authServices = {
     createUserIntoDB,
     signInFromDb,
+    createAdminIntoDb,
+    updateUser,
 };

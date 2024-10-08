@@ -36,7 +36,7 @@ const UnfollowUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
-// ! for unfollowing user
+// ! for getting specific user
 const getSpecificUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_service_1.userServices.getSpecificUserFromDb(req.params.id);
     (0, sendResponse_1.default)(res, {
@@ -46,9 +46,75 @@ const getSpecificUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0
         data: result,
     });
 }));
+// ! for getting single user
+const getSingleUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.userServices.getSingleUserFromDb(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "User retrived successfully!!!",
+        data: result,
+    });
+}));
+// ! for unfollowing user
+const getAllUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.userServices.getAllUsersFromDb();
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "All Users retrived successfully!!!",
+        data: result,
+    });
+}));
+// ! for blocking a user
+const blockUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.userServices.blockUserFromDb(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "User blocked successfully!!!",
+        data: result,
+    });
+}));
+// ! for unblocking a user
+const unblockUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.userServices.unblockUserFromDb(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "User unblocked successfully!!!",
+        data: result,
+    });
+}));
+// ! for unblocking a user
+const deleteUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.userServices.deleteUserFromDb(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "User deleted successfully!!!",
+        data: result,
+    });
+}));
+// ! for getting all admin user
+const getAllAdminUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.userServices.getAllAdminUsersFromDb();
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "All Admin Users retrived successfully!!!",
+        data: result,
+    });
+}));
 //
 exports.userController = {
     followUser,
     UnfollowUser,
     getSpecificUser,
+    getAllUsers,
+    blockUser,
+    unblockUser,
+    deleteUser,
+    getAllAdminUsers,
+    getSingleUser,
 };

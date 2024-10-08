@@ -16,14 +16,18 @@ const router = (0, express_1.Router)();
 router.get("/all-post", post_controller_1.postController.getAllPost);
 // ! for getting user post
 router.get("/user-post", (0, auth_1.default)(user_constant_1.UserRole.admin, user_constant_1.UserRole.user), post_controller_1.postController.getUserPost);
-// ! for getting single post
-router.get("/single-post/:id", post_controller_1.postController.getSinglePost);
 // ! for creating a post
 router.post("/create-post", (0, auth_1.default)(user_constant_1.UserRole.admin, user_constant_1.UserRole.user), SendImageCloudinary_1.upload.single("file"), (req, res, next) => {
     var _a;
     req.body = JSON.parse((_a = req.body) === null || _a === void 0 ? void 0 : _a.data);
     next();
 }, (0, validateRequest_1.default)(post_validation_1.postValidationSchemas.createPostVlidationSchema), post_controller_1.postController.craetePost);
+//! for giving upvotes
+router.patch("/upvote-post", post_controller_1.postController.upvotePost);
+//! for giving downvotes
+router.patch("/downvote-post", post_controller_1.postController.downvotePost);
+// ! for getting single post
+router.get("/single-post/:id", post_controller_1.postController.getSinglePost);
 // ! for updating a post
 router.patch("/update-post/:id", SendImageCloudinary_1.upload.single("file"), (req, res, next) => {
     var _a;

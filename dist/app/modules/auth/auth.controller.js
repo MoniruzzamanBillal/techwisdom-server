@@ -26,6 +26,27 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
+//  !  create admin user
+const createAdminUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield auth_service_1.authServices.createAdminIntoDb(req.body, req.file);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "Admin registered successfully ",
+        data: result,
+    });
+}));
+//  !  create admin user
+const updateUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const result = yield auth_service_1.authServices.updateUser(req.body, (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.id, req.file);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "User  updated successfully ",
+        data: result,
+    });
+}));
 // ! signin
 const signIn = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.authServices.signInFromDb(req.body);
@@ -52,4 +73,6 @@ const signIn = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
 exports.authController = {
     createUser,
     signIn,
+    createAdminUser,
+    updateUser,
 };

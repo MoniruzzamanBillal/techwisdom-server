@@ -8,14 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userModel = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const mongoose_1 = require("mongoose");
-const config_1 = __importDefault(require("../../config"));
 const user_constant_1 = require("./user.constant");
 const userSchema = new mongoose_1.Schema({
     name: {
@@ -63,14 +58,15 @@ const userSchema = new mongoose_1.Schema({
         },
     ],
 }, { timestamps: true });
-userSchema.pre("save", function (next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const user = this;
-        user.password = yield bcrypt_1.default.hash(user === null || user === void 0 ? void 0 : user.password, Number(config_1.default.bcrypt_salt_rounds));
-        next();
-    });
-});
+// userSchema.pre("save", async function (next) {
+//   // eslint-disable-next-line @typescript-eslint/no-this-alias
+//   const user = this;
+//   user.password = await bcrypt.hash(
+//     user?.password,
+//     Number(config.bcrypt_salt_rounds)
+//   );
+//   next();
+// });
 // ! send password empty in response
 userSchema.post("save", function (doc, next) {
     return __awaiter(this, void 0, void 0, function* () {

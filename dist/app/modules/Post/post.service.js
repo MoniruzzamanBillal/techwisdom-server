@@ -17,6 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../Error/AppError"));
 const SendImageCloudinary_1 = require("../../util/SendImageCloudinary");
 const post_model_1 = require("./post.model");
+const mongoose_1 = __importDefault(require("mongoose"));
 // ! for crating a post
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cratePostInDb = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
@@ -93,6 +94,68 @@ const getUserPostFromDb = (userId) => __awaiter(void 0, void 0, void 0, function
     const result = yield post_model_1.postModel.find({ authorId: userId });
     return result;
 });
+// ! for upvoting post
+const upvotePostInDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { postId, userId } = payload;
+    const post = yield post_model_1.postModel.findById(postId);
+    if (!post) {
+        throw new Error("Post not found !!!");
+    }
+    if (post === null || post === void 0 ? void 0 : post.isDeleted) {
+        throw new Error("Post is deleted !!!");
+    }
+    // *  Check if the user has already upvoted
+    const objectIdUserId = new mongoose_1.default.Types.ObjectId(userId);
+    if (post.upvotedBy.some((id) => id.toString() === objectIdUserId.toString())) {
+        throw new Error("User has already upvoted this post");
+    }
+    // Remove from downvotedBy if the user previously downvoted
+    post.downvotedBy = post.downvotedBy.filter((id) => id.toString() !== objectIdUserId.toString());
+    if (post.downvotes && post.downvotedBy.length < post.downvotes) {
+        post.downvotes -= 1;
+    }
+    // Add userId to upvotedBy array and increment upvotes
+    yield post_model_1.postModel.findByIdAndUpdate(postId, {
+        $push: { upvotedBy: objectIdUserId },
+    });
+    post.upvotes = (post.upvotes || 0) + 1;
+    yield post.save();
+    console.log(post);
+    const result = yield post_model_1.postModel.findById(postId);
+    return result;
+});
+// ! for downvoting post
+const downvotePostInDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { postId, userId } = payload;
+    const post = yield post_model_1.postModel.findById(postId);
+    if (!post) {
+        throw new Error("Post not found !!!");
+    }
+    if (post === null || post === void 0 ? void 0 : post.isDeleted) {
+        throw new Error("Post is deleted !!!");
+    }
+    const objectIdUserId = new mongoose_1.default.Types.ObjectId(userId);
+    // Check if the user has already downvoted
+    if (post.downvotedBy.some((id) => id.toString() === objectIdUserId.toString())) {
+        throw new Error("User has already downvoted this post");
+    }
+    // Remove from upvotedBy if the user previously upvoted
+    post.upvotedBy = post.upvotedBy.filter((id) => id.toString() !== objectIdUserId.toString());
+    // Decrease upvotes if applicable
+    const currentUpvotes = (_a = post.upvotes) !== null && _a !== void 0 ? _a : 0;
+    if (post.upvotedBy && post.upvotedBy.length < currentUpvotes) {
+        post.upvotes = currentUpvotes - 1;
+    }
+    // Add userId to downvotedBy array and increment downvotes
+    yield post_model_1.postModel.findByIdAndUpdate(postId, {
+        $push: { downvotedBy: objectIdUserId },
+    });
+    post.downvotes = (post.downvotes || 0) + 1;
+    yield post.save();
+    const result = yield post_model_1.postModel.findById(postId);
+    return result;
+});
 //
 exports.postServices = {
     cratePostInDb,
@@ -101,4 +164,6 @@ exports.postServices = {
     getAllPostFromDb,
     getSinglePostFromDb,
     getUserPostFromDb,
+    upvotePostInDb,
+    downvotePostInDb,
 };

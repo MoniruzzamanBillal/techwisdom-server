@@ -36,6 +36,18 @@ const postSchema = new mongoose_1.Schema({
             ref: "Comment",
         },
     ],
+    upvotedBy: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+    downvotedBy: [
+        {
+            type: mongoose_1.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
     isPremium: {
         type: Boolean,
         require: true,

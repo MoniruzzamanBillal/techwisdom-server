@@ -18,6 +18,7 @@ const AppError_1 = __importDefault(require("../../Error/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
 const user_model_1 = require("./user.model");
 const mongoose_1 = __importDefault(require("mongoose"));
+const user_constant_1 = require("./user.constant");
 // ! for following a user
 const followUserFromDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // * followerId is your ID
@@ -99,6 +100,11 @@ const unfollowUserFromDb = (payload) => __awaiter(void 0, void 0, void 0, functi
         throw new Error(error);
     }
 });
+// ! for getting all user data
+const getAllUsersFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.userModel.find({ userRole: { $ne: "admin" } });
+    return result;
+});
 // ! for getting specific user data
 const getSpecificUserFromDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const userData = yield user_model_1.userModel
@@ -106,16 +112,82 @@ const getSpecificUserFromDb = (userId) => __awaiter(void 0, void 0, void 0, func
         .populate("followers")
         .populate("following");
     if (!userData) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This post don't exist!!! ");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user don't exist!!! ");
     }
     if (userData === null || userData === void 0 ? void 0 : userData.isDeleted) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This post is deleted!!! ");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user is deleted!!! ");
     }
     return userData;
+});
+// ! for getting single user data
+const getSingleUserFromDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = yield user_model_1.userModel.findById(userId);
+    if (!userData) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user don't exist!!! ");
+    }
+    if (userData === null || userData === void 0 ? void 0 : userData.isDeleted) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user is deleted!!! ");
+    }
+    return userData;
+});
+// ! for blocking user data
+const blockUserFromDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = yield user_model_1.userModel.findById(userId);
+    if (!userData) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user don't exist!!! ");
+    }
+    if (userData === null || userData === void 0 ? void 0 : userData.isDeleted) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user is deleted!!! ");
+    }
+    userData.status = user_constant_1.UserStatus === null || user_constant_1.UserStatus === void 0 ? void 0 : user_constant_1.UserStatus.blocked;
+    userData.save();
+    const result = yield user_model_1.userModel.findByIdAndUpdate(userId, { status: user_constant_1.UserStatus === null || user_constant_1.UserStatus === void 0 ? void 0 : user_constant_1.UserStatus.blocked }, {
+        new: true,
+    });
+    return result;
+});
+// ! for unblocking user data
+const unblockUserFromDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = yield user_model_1.userModel.findById(userId);
+    if (!userData) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user don't exist!!! ");
+    }
+    if (userData === null || userData === void 0 ? void 0 : userData.isDeleted) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user is deleted!!! ");
+    }
+    const result = yield user_model_1.userModel.findByIdAndUpdate(userId, { status: user_constant_1.UserStatus === null || user_constant_1.UserStatus === void 0 ? void 0 : user_constant_1.UserStatus.active }, {
+        new: true,
+    });
+    return result;
+});
+// ! for deleting user data
+const deleteUserFromDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = yield user_model_1.userModel.findById(userId);
+    if (!userData) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user don't exist!!! ");
+    }
+    if (userData === null || userData === void 0 ? void 0 : userData.isDeleted) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "This user is already deleted!!! ");
+    }
+    const result = yield user_model_1.userModel.findByIdAndUpdate(userId, { isDeleted: true }, {
+        new: true,
+    });
+    return result;
+});
+// ! for getting all admin data
+const getAllAdminUsersFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.userModel.find({ userRole: user_constant_1.UserRole === null || user_constant_1.UserRole === void 0 ? void 0 : user_constant_1.UserRole.admin });
+    return result;
 });
 //
 exports.userServices = {
     followUserFromDb,
     unfollowUserFromDb,
     getSpecificUserFromDb,
+    getAllUsersFromDb,
+    blockUserFromDb,
+    unblockUserFromDb,
+    deleteUserFromDb,
+    getAllAdminUsersFromDb,
+    getSingleUserFromDb,
 };

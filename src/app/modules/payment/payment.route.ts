@@ -3,8 +3,8 @@ import { paymentController } from "./payment.controller";
 
 const router = Router();
 
-// ! get specific subscriber data
-router.get("/get-subscriber/:id", paymentController.getSubscriberData);
+// ! get payment data
+router.get("/payment-data", paymentController.getAllPaymentData);
 
 // ! for payment
 router.post(
@@ -17,6 +17,9 @@ router.post(
 router.post("/confirmation", paymentController.verifyPayment);
 // ! cancel payment
 router.post("/cancel-payment", paymentController.cancelPayment);
+
+// ! get specific subscriber data
+router.get("/get-subscriber/:id", paymentController.getSubscriberData);
 
 //
 export const paymentRouter = router;

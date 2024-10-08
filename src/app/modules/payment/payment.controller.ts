@@ -82,6 +82,17 @@ const getSubscriberData = catchAsync(async (req, res) => {
     data: result,
   });
 });
+// ! get all payment data
+const getAllPaymentData = catchAsync(async (req, res) => {
+  const result = await paymentServices.getPaymentDataFromDb();
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "payment data retrived successfully !!!",
+    data: result,
+  });
+});
 
 //
 export const paymentController = {
@@ -89,4 +100,5 @@ export const paymentController = {
   verifyPayment,
   cancelPayment,
   getSubscriberData,
+  getAllPaymentData,
 };

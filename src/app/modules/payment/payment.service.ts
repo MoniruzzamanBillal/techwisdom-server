@@ -80,9 +80,21 @@ const getSubscriberDataFromDb = async (userId: string) => {
   return result;
 };
 
+// ! for getting all payment data
+const getPaymentDataFromDb = async () => {
+  const result = await paymentModel
+    .find({
+      paymentStatus: PAYMENTSTATUS.Completed,
+    })
+    .populate("userId");
+
+  return result;
+};
+
 //
 export const paymentServices = {
   procedePayment,
   verifyPayment,
   getSubscriberDataFromDb,
+  getPaymentDataFromDb,
 };
