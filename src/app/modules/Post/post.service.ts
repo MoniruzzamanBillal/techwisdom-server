@@ -137,7 +137,7 @@ const upvotePostInDb = async (payload: TUpvoteDownvote) => {
 
   // *  Check if the user has already upvoted
 
-  const objectIdUserId = new mongoose.Schema.Types.ObjectId(userId);
+  const objectIdUserId = new mongoose.Types.ObjectId(userId);
 
   if (
     post.upvotedBy.some((id) => id.toString() === objectIdUserId.toString())
@@ -155,11 +155,19 @@ const upvotePostInDb = async (payload: TUpvoteDownvote) => {
   }
 
   // Add userId to upvotedBy array and increment upvotes
-  post.upvotedBy.push(objectIdUserId);
+
+  await postModel.findByIdAndUpdate(postId, {
+    $push: { upvotedBy: objectIdUserId },
+  });
+
   post.upvotes = (post.upvotes || 0) + 1;
 
   await post.save();
-  return post;
+
+  console.log(post);
+
+  const result = await postModel.findById(postId);
+  return result;
 };
 
 // ! for downvoting post
@@ -176,7 +184,7 @@ const downvotePostInDb = async (payload: TUpvoteDownvote) => {
     throw new Error("Post is deleted !!!");
   }
 
-  const objectIdUserId = new mongoose.Schema.Types.ObjectId(userId);
+  const objectIdUserId = new mongoose.Types.ObjectId(userId);
 
   // Check if the user has already downvoted
   if (
@@ -197,11 +205,15 @@ const downvotePostInDb = async (payload: TUpvoteDownvote) => {
   }
 
   // Add userId to downvotedBy array and increment downvotes
-  post.downvotedBy.push(objectIdUserId);
+  await postModel.findByIdAndUpdate(postId, {
+    $push: { downvotedBy: objectIdUserId },
+  });
+
   post.downvotes = (post.downvotes || 0) + 1;
 
   await post.save();
-  return post;
+  const result = await postModel.findById(postId);
+  return result;
 };
 
 //
