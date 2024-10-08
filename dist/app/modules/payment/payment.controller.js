@@ -84,6 +84,48 @@ const getAllPaymentData = (0, catchAsync_1.default)((req, res) => __awaiter(void
         data: result,
     });
 }));
+// ! get getting payment revenue  data
+const getAllPaymentRevenueData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield payment_service_1.paymentServices.getPaymentRevenueFromDb();
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "payment revenue data retrived successfully !!!",
+        data: result,
+    });
+}));
+// ! get getting all subscribed number
+const getAllSubscribedUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield payment_service_1.paymentServices.getSubscribeduser();
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Subscribed user retribed successfully ",
+        data: result,
+    });
+}));
+// ! get getting all user number
+const getAllUserNumber = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield payment_service_1.paymentServices.getTotalUserNumber();
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: " user retribed successfully ",
+        data: result,
+    });
+}));
+// ! for getting all payment data for chart data
+const getAllPaymentChartData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { range } = req.query;
+    const result = yield payment_service_1.paymentServices.getAllCompletedPaymentChartData(range);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: "Completed Payment Bookings retrieved successfully",
+        data: result,
+    });
+}));
+//
 //
 exports.paymentController = {
     procedePayment,
@@ -91,4 +133,8 @@ exports.paymentController = {
     cancelPayment,
     getSubscriberData,
     getAllPaymentData,
+    getAllPaymentRevenueData,
+    getAllSubscribedUser,
+    getAllPaymentChartData,
+    getAllUserNumber,
 };

@@ -6,6 +6,14 @@ const payment_controller_1 = require("./payment.controller");
 const router = (0, express_1.Router)();
 // ! get payment data
 router.get("/payment-data", payment_controller_1.paymentController.getAllPaymentData);
+// ! get  payment revenue data
+router.get("/payment-revenue", payment_controller_1.paymentController.getAllPaymentRevenueData);
+// ! get  all subscriber user number
+router.get("/subscriber-number", payment_controller_1.paymentController.getAllSubscribedUser);
+// ! get  all  user number
+router.get("/user-number", payment_controller_1.paymentController.getAllUserNumber);
+// ! get getting all payment data for chart
+router.get("/payment-chart", payment_controller_1.paymentController.getAllPaymentChartData);
 // ! for payment
 router.post("/procede-payment", payment_controller_1.paymentController.procedePayment);
 // ! verifying payment

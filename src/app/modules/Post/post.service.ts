@@ -4,6 +4,9 @@ import { SendImageCloudinary } from "../../util/SendImageCloudinary";
 import { TPost } from "./post.interface";
 import { postModel } from "./post.model";
 import mongoose, { Schema, Types } from "mongoose";
+import Querybuilder from "../../builder/Queryuilder";
+
+const postSearchableFields = ["title", "content"];
 
 // ! for crating a post
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,14 +24,39 @@ const cratePostInDb = async (payload: TPost, file: any) => {
 };
 
 // ! for getting all post
-const getAllPostFromDb = async () => {
+const getAllPostFromDb = async (query: Record<string, unknown>) => {
+
+  console.log( 'in post services = ' ,  query)
+
+
+  let postQueryBuilder 
+  if(query?.type) {
+    postQueryBuilder = postModel.find({ category : query?.type }).sort( { upvotes: -1 } );
+    // postQueryBuilder = postModel.find({ category : query?.type }).sort( ' upvotes');
+  }
+  else{
+    postQueryBuilder = postModel.find().sort({ upvotes: -1 });
+    // postQueryBuilder = postModel.find().sort( ' -upvotes' );
+  }
+
+  const postQuery = new Querybuilder(postQueryBuilder , query  ).search(postSearchableFields).sort()
+
+  const resultModified = await postQuery?.queryModel 
+  console.log(resultModified)
+
+
   const result = await postModel
     .find()
     .populate("authorId")
     .populate("category")
     .populate("comments");
 
-  return result;
+
+
+    // console.log(result)
+
+
+  return resultModified;
 };
 
 // ! for getting single category

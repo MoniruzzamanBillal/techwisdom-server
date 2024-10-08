@@ -16,7 +16,8 @@ const craetePost = catchAsync(async (req, res) => {
 
 // ! get all  post
 const getAllPost = catchAsync(async (req, res) => {
-  const result = await postServices.getAllPostFromDb();
+ 
+  const result = await postServices.getAllPostFromDb(req?.query);
 
   sendResponse(res, {
     statusCode: 201,
