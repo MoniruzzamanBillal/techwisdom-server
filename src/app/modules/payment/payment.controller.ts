@@ -119,6 +119,18 @@ const getAllSubscribedUser = catchAsync(async (req, res) => {
   });
 });
 
+// ! get getting all user number
+const getAllUserNumber = catchAsync(async (req, res) => {
+  const result = await paymentServices.getTotalUserNumber();
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: " user retribed successfully ",
+    data: result,
+  });
+});
+
 // ! for getting all payment data for chart data
 const getAllPaymentChartData = catchAsync(async (req, res) => {
   const { range } = req.query;
@@ -145,4 +157,5 @@ export const paymentController = {
   getAllPaymentRevenueData,
   getAllSubscribedUser,
   getAllPaymentChartData,
+  getAllUserNumber,
 };

@@ -119,6 +119,15 @@ const getSubscribeduser = async () => {
   return result;
 };
 
+// ! for getting all user number
+const getTotalUserNumber = async () => {
+  const response = await userModel.find();
+
+  const result = response?.length;
+
+  return result;
+};
+
 // ! for getting all payment data for showing in chart
 const getAllCompletedPaymentChartData = async (range: string) => {
   const today = new Date();
@@ -187,4 +196,5 @@ export const paymentServices = {
   getPaymentRevenueFromDb,
   getSubscribeduser,
   getAllCompletedPaymentChartData,
+  getTotalUserNumber,
 };

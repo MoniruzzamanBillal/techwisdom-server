@@ -12,6 +12,9 @@ router.get("/payment-revenue", paymentController.getAllPaymentRevenueData);
 // ! get  all subscriber user number
 router.get("/subscriber-number", paymentController.getAllSubscribedUser);
 
+// ! get  all  user number
+router.get("/user-number", paymentController.getAllUserNumber);
+
 // ! get getting all payment data for chart
 router.get("/payment-chart", paymentController.getAllPaymentChartData);
 
