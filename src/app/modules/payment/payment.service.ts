@@ -8,6 +8,7 @@ import { initiatePayment, verifyPay } from "./payment.util";
 import { paymentModel } from "./payment.model";
 import { PAYMENTSTATUS } from "./payment.constant";
 import { subscriptionsModel } from "../Subscriptions/subscriptions.model";
+import { subDays } from "date-fns";
 
 // ! for payment
 const procedePayment = async (payload: TPayment) => {
@@ -107,6 +108,76 @@ const getPaymentRevenueFromDb = async () => {
   return revenue;
 };
 
+// ! for getting all subscribed user number
+const getSubscribeduser = async () => {
+  const response = await subscriptionsModel.find({
+    status: { $eq: "Active" },
+  });
+
+  const result = response?.length;
+
+  return result;
+};
+
+// ! for getting all payment data for showing in chart
+const getAllCompletedPaymentChartData = async (range: string) => {
+  const today = new Date();
+  let dateRange;
+
+  if (range === "thirty") {
+    dateRange = subDays(today, 30);
+  } else if (range === "seven") {
+    dateRange = subDays(today, 7);
+  } else {
+    dateRange = subDays(today, 60);
+  }
+
+  const paymentData = await paymentModel
+    .find({
+      paymentStatus: { $eq: PAYMENTSTATUS.Completed },
+      updatedAt: { $gte: dateRange },
+    })
+    .select({
+      updatedAt: 1,
+      amount: 1,
+    })
+    .sort({ _id: -1 });
+
+  const formatDate = (dateString: Date) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    };
+    return date.toLocaleDateString("en-GB", options).replace(/ /g, "-");
+  };
+
+  const modifiedData = paymentData?.map((item) => ({
+    ...item.toObject(),
+    updatedAt: formatDate(item.updatedAt!),
+  }));
+
+  // *  Define the type for accumulator
+  type TAggregatedData = {
+    [date: string]: { updatedAt: string; amount: number };
+  };
+
+  const aggregatedData = modifiedData.reduce((acc: TAggregatedData, item) => {
+    const date = item.updatedAt;
+
+    if (!acc[date]) {
+      acc[date] = { updatedAt: date, amount: 0 };
+    }
+
+    acc[date].amount += item.amount;
+
+    return acc;
+  }, {});
+
+  return Object.values(aggregatedData);
+};
+
 //
 export const paymentServices = {
   procedePayment,
@@ -114,4 +185,6 @@ export const paymentServices = {
   getSubscriberDataFromDb,
   getPaymentDataFromDb,
   getPaymentRevenueFromDb,
+  getSubscribeduser,
+  getAllCompletedPaymentChartData,
 };

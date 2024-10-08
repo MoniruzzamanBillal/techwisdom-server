@@ -107,6 +107,34 @@ const getAllPaymentRevenueData = catchAsync(async (req, res) => {
   });
 });
 
+// ! get getting all subscribed number
+const getAllSubscribedUser = catchAsync(async (req, res) => {
+  const result = await paymentServices.getSubscribeduser();
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Subscribed user retribed successfully ",
+    data: result,
+  });
+});
+
+// ! for getting all payment data for chart data
+const getAllPaymentChartData = catchAsync(async (req, res) => {
+  const { range } = req.query;
+  const result = await paymentServices.getAllCompletedPaymentChartData(
+    range as string
+  );
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Completed Payment Bookings retrieved successfully",
+    data: result,
+  });
+});
+
+//
 //
 export const paymentController = {
   procedePayment,
@@ -115,4 +143,6 @@ export const paymentController = {
   getSubscriberData,
   getAllPaymentData,
   getAllPaymentRevenueData,
+  getAllSubscribedUser,
+  getAllPaymentChartData,
 };
