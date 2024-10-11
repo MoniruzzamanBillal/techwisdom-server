@@ -68,7 +68,7 @@ const getUserPostLikeCount = catchAsync(async (req, res) => {
   });
 });
 
-// ! get user post like count
+// ! get user post comment count
 const getUserPostCommentCount = catchAsync(async (req, res) => {
   const { userId } = req.user;
 
@@ -78,6 +78,19 @@ const getUserPostCommentCount = catchAsync(async (req, res) => {
     statusCode: 201,
     success: true,
     message: "User Post comment count retrived successfully!!!",
+    data: result,
+  });
+});
+// ! get user post dislike count
+const getUserPostDislikeCount = catchAsync(async (req, res) => {
+  const { userId } = req.user;
+
+  const result = await postServices.getUserPostDislikeCount(userId);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User Post dislike count retrived successfully!!!",
     data: result,
   });
 });
@@ -159,4 +172,5 @@ export const postController = {
   getUserPostCount,
   getUserPostLikeCount,
   getUserPostCommentCount,
+  getUserPostDislikeCount,
 };

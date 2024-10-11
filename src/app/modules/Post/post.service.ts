@@ -91,14 +91,38 @@ const getUserPostCount = async (userId: string) => {
 const getUserPostLikeCount = async (userId: string) => {
   const userPost = await postModel.find({ authorId: userId });
 
-  return userPost;
+  const totalLike = userPost?.reduce((sum, post: TPost) => {
+    sum += post?.upvotes as number;
+    return sum;
+  }, 0);
+
+  return totalLike;
+};
+
+// ! for getting all user post dislike count
+const getUserPostDislikeCount = async (userId: string) => {
+  const userPost = await postModel.find({ authorId: userId });
+
+  const totalDisLike = userPost?.reduce((sum, post: TPost) => {
+    sum += post?.downvotes as number;
+    return sum;
+  }, 0);
+
+  return totalDisLike;
 };
 
 // ! for getting all user post comment count
 const getUserPostCommentCount = async (userId: string) => {
-  const userPost = await postModel.find({ authorId: userId });
+  const userPost = await postModel
+    .find({ authorId: userId })
+    .select(" comments ");
 
-  return userPost;
+  const totalComment = userPost?.reduce((sum, post: TPost) => {
+    sum += post?.comments?.length;
+    return sum;
+  }, 0);
+
+  return totalComment;
 };
 
 // ! for getting single category
@@ -227,7 +251,7 @@ const upvotePostInDb = async (payload: TUpvoteDownvote) => {
 
   await post.save();
 
-  console.log(post);
+  // console.log(post);
 
   const result = await postModel.findById(postId);
   return result;
@@ -292,4 +316,5 @@ export const postServices = {
   getUserPostCount,
   getUserPostLikeCount,
   getUserPostCommentCount,
+  getUserPostDislikeCount,
 };

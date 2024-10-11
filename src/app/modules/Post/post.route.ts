@@ -28,14 +28,20 @@ router.get(
 
 // ! for getting user post like count
 router.get(
-  "/user-post-count",
+  "/user-post-like-count",
   auth(UserRole.user),
   postController.getUserPostLikeCount
+);
+// ! for getting user post dislike count
+router.get(
+  "/user-post-dislike-count",
+  auth(UserRole.user),
+  postController.getUserPostDislikeCount
 );
 
 // ! for getting user post comment count
 router.get(
-  "/user-post-count",
+  "/user-post-comment-count",
   auth(UserRole.user),
   postController.getUserPostCommentCount
 );
