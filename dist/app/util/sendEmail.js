@@ -14,19 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const config_1 = __importDefault(require("../config"));
 const sendEmail = (resetPasswordLink, receiverMail) => __awaiter(void 0, void 0, void 0, function* () {
     const transporter = nodemailer_1.default.createTransport({
-        host: config_1.default.nodemailer_host,
+        host: 'smtp.gmail.com',
         port: 587,
         secure: false, // Use `true` for port 465, `false` for all other ports
         auth: {
-            user: config_1.default.nodemailer_sender,
-            pass: config_1.default.nodemailer_password,
+            user: "mdmoniruzzamanbillal2@gmail.com",
+            pass: "ilmf eeqw agtp mibf",
         },
     });
     const response = yield transporter.sendMail({
-        from: config_1.default.nodemailer_sender, // sender address
+        from: "mdmoniruzzamanbillal2@gmail.com", // sender address
         to: receiverMail, // list of receivers
         subject: "Reset your password within 5 mins!",
         text: "", // plain text body

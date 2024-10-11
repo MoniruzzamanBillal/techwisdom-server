@@ -21,11 +21,15 @@ router.post("/admin-register", SendImageCloudinary_1.upload.single("file"), (req
     req.body = JSON.parse(req.body.data);
     next();
 }, (0, validateRequest_1.default)(user_validation_1.userValidationSchemas.createAdminUser), auth_controller_1.authController.createAdminUser);
+router.post("/signin", (0, validateRequest_1.default)(auth_validation_1.authValidations.loginValidationSchema), auth_controller_1.authController.signIn);
+// ! for reseting password
+router.patch("/reset-password", auth_controller_1.authController.resetPassWord);
 // ! for updating user
 router.patch("/user-update/:id", SendImageCloudinary_1.upload.single("file"), (req, res, next) => {
     req.body = JSON.parse(req.body.data);
     next();
 }, (0, validateRequest_1.default)(user_validation_1.userValidationSchemas.updateAdminUser), auth_controller_1.authController.updateUser);
-router.post("/signin", (0, validateRequest_1.default)(auth_validation_1.authValidations.loginValidationSchema), auth_controller_1.authController.signIn);
+// ! for sending reset link to email
+router.patch("/reset-link/:email", auth_controller_1.authController.sendResetLink);
 //
 exports.authRouter = router;

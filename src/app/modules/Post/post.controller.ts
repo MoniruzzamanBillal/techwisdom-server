@@ -16,7 +16,6 @@ const craetePost = catchAsync(async (req, res) => {
 
 // ! get all  post
 const getAllPost = catchAsync(async (req, res) => {
- 
   const result = await postServices.getAllPostFromDb(req?.query);
 
   sendResponse(res, {
@@ -27,18 +26,58 @@ const getAllPost = catchAsync(async (req, res) => {
   });
 });
 
-// ! get single post
+// ! get user post
 const getUserPost = catchAsync(async (req, res) => {
   const { userId } = req.user;
 
-  
-
-  const result = await postServices.getUserPostFromDb(userId , req?.query);
+  const result = await postServices.getUserPostFromDb(userId, req?.query);
 
   sendResponse(res, {
     statusCode: 201,
     success: true,
     message: "User Post retrived successfully!!!",
+    data: result,
+  });
+});
+
+// ! get user post count
+const getUserPostCount = catchAsync(async (req, res) => {
+  const { userId } = req.user;
+
+  const result = await postServices.getUserPostCount(userId);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User Post count retrived successfully!!!",
+    data: result,
+  });
+});
+
+// ! get user post like count
+const getUserPostLikeCount = catchAsync(async (req, res) => {
+  const { userId } = req.user;
+
+  const result = await postServices.getUserPostLikeCount(userId);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User Post like count retrived successfully!!!",
+    data: result,
+  });
+});
+
+// ! get user post like count
+const getUserPostCommentCount = catchAsync(async (req, res) => {
+  const { userId } = req.user;
+
+  const result = await postServices.getUserPostCommentCount(userId);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "User Post comment count retrived successfully!!!",
     data: result,
   });
 });
@@ -117,4 +156,7 @@ export const postController = {
   getUserPost,
   upvotePost,
   downvotePost,
+  getUserPostCount,
+  getUserPostLikeCount,
+  getUserPostCommentCount,
 };

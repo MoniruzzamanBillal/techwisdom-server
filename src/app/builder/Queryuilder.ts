@@ -11,7 +11,7 @@ class Querybuilder<T> {
 
   // ! for searching
   search(searchableFiels: string[]) {
-    let searchTerm = this.query?.searchTerm;
+    const searchTerm = this.query?.searchTerm;
 
     if (searchTerm) {
       this.queryModel = this.queryModel.find({
@@ -56,10 +56,16 @@ class Querybuilder<T> {
 
   // ! pagination
   pagination() {
-    const limit = Number(this.query?.limit) || 10;
-    const page = Number(this.query?.page) || 1;
-    const skip = (page - 1) * limit;
-    this.queryModel = this.queryModel.skip(skip).limit(limit);
+    if (this?.query?.searchTerm || this?.query?.sort || this?.query?.type) {
+      return this;
+    } else if (this?.query?.limit || this.query?.page) {
+      const limit = Number(this.query?.limit) || 10;
+      const page = Number(this.query?.page) || 1;
+      const skip = (page - 1) * limit;
+      this.queryModel = this.queryModel.skip(skip).limit(limit);
+      return this;
+    }
+
     return this;
   }
 

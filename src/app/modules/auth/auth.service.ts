@@ -143,8 +143,9 @@ const resetMailLink = async (email: string) => {
 
  
 
-  // const resetLink = `https://rent-ride-ivory.vercel.app/reset-password/${token}`;
-  const resetLink = `http://localhost:3000/ResetPassword/${token}`;
+ 
+  // const resetLink = `http://localhost:3000/ResetPassword/${token}`;
+  const resetLink = `https://techwisdom.vercel.app/ResetPassword/${token}`;
 
   const sendMailResponse = await sendEmail(resetLink, email);
 

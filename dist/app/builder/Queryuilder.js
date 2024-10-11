@@ -8,7 +8,7 @@ class Querybuilder {
     // ! for searching
     search(searchableFiels) {
         var _a;
-        let searchTerm = (_a = this.query) === null || _a === void 0 ? void 0 : _a.searchTerm;
+        const searchTerm = (_a = this.query) === null || _a === void 0 ? void 0 : _a.searchTerm;
         if (searchTerm) {
             this.queryModel = this.queryModel.find({
                 $or: searchableFiels.map((field) => ({
@@ -41,11 +41,17 @@ class Querybuilder {
     }
     // ! pagination
     pagination() {
-        var _a, _b;
-        const limit = Number((_a = this.query) === null || _a === void 0 ? void 0 : _a.limit) || 10;
-        const page = Number((_b = this.query) === null || _b === void 0 ? void 0 : _b.page) || 1;
-        const skip = (page - 1) * limit;
-        this.queryModel = this.queryModel.skip(skip).limit(limit);
+        var _a, _b, _c, _d, _e, _f, _g;
+        if (((_a = this === null || this === void 0 ? void 0 : this.query) === null || _a === void 0 ? void 0 : _a.searchTerm) || ((_b = this === null || this === void 0 ? void 0 : this.query) === null || _b === void 0 ? void 0 : _b.sort) || ((_c = this === null || this === void 0 ? void 0 : this.query) === null || _c === void 0 ? void 0 : _c.type)) {
+            return this;
+        }
+        else if (((_d = this === null || this === void 0 ? void 0 : this.query) === null || _d === void 0 ? void 0 : _d.limit) || ((_e = this.query) === null || _e === void 0 ? void 0 : _e.page)) {
+            const limit = Number((_f = this.query) === null || _f === void 0 ? void 0 : _f.limit) || 10;
+            const page = Number((_g = this.query) === null || _g === void 0 ? void 0 : _g.page) || 1;
+            const skip = (page - 1) * limit;
+            this.queryModel = this.queryModel.skip(skip).limit(limit);
+            return this;
+        }
         return this;
     }
     // ! field

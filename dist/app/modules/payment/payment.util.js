@@ -17,7 +17,10 @@ const axios_1 = __importDefault(require("axios"));
 const config_1 = __importDefault(require("../../config"));
 // http://localhost:5000
 //
-const redirectLink = "http://localhost:5000/api/v1";
+// const redirectLink = "http://localhost:5000/api/v1";
+const redirectLink = "https://techwisdom-server.vercel.app/api/v1";
+// const cancelUrl =  "http://localhost:3000/"
+const cancelUrl = "https://techwisdom.vercel.app/";
 const initiatePayment = (paymentData) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield axios_1.default.post(process.env.PAYMENT_URL, {
         tran_id: `${paymentData.transactionId}`,
@@ -25,7 +28,7 @@ const initiatePayment = (paymentData) => __awaiter(void 0, void 0, void 0, funct
         signature_key: config_1.default.SIGNATURE_KEY,
         success_url: `${redirectLink}/payment/confirmation?transactionId=${paymentData.transactionId}&userId=${paymentData === null || paymentData === void 0 ? void 0 : paymentData.userId}`,
         fail_url: `${redirectLink}/payment/cancel-payment`,
-        cancel_url: "http://localhost:3000/",
+        cancel_url: cancelUrl,
         amount: paymentData.amount,
         currency: "BDT",
         desc: "Merchant Registration Payment",

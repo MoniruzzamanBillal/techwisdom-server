@@ -18,7 +18,8 @@ const sendResponse_1 = __importDefault(require("../../util/sendResponse"));
 const subscriptions_model_1 = require("../Subscriptions/subscriptions.model");
 const user_model_1 = require("../user/user.model");
 const payment_service_1 = require("./payment.service");
-const redirectURL = "http://localhost:3000";
+// const redirectURL = "http://localhost:3000";
+const redirectURL = "https://techwisdom.vercel.app";
 // ! for payment
 const procedePayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield payment_service_1.paymentServices.procedePayment(req.body);
@@ -61,7 +62,7 @@ const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 // ! for cancel payment
 const cancelPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.redirect(`${redirectURL}/dashboard/user/user-payment?paymentConfirmation=Failed`);
+    return res.redirect(`${redirectURL}`);
 }));
 // ! get subscriber data
 const getSubscriberData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

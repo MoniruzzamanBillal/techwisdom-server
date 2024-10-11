@@ -19,6 +19,27 @@ router.get(
   postController.getUserPost
 );
 
+// ! for getting user post count
+router.get(
+  "/user-post-count",
+  auth(UserRole.user),
+  postController.getUserPostCount
+);
+
+// ! for getting user post like count
+router.get(
+  "/user-post-count",
+  auth(UserRole.user),
+  postController.getUserPostLikeCount
+);
+
+// ! for getting user post comment count
+router.get(
+  "/user-post-count",
+  auth(UserRole.user),
+  postController.getUserPostCommentCount
+);
+
 // ! for creating a post
 router.post(
   "/create-post",

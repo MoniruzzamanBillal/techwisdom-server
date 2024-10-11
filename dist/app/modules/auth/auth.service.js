@@ -20,6 +20,7 @@ const SendImageCloudinary_1 = require("../../util/SendImageCloudinary");
 const user_model_1 = require("../user/user.model");
 const auth_util_1 = require("./auth.util");
 const config_1 = __importDefault(require("../../config"));
+const sendEmail_1 = require("../../util/sendEmail");
 // ! create user in database
 const createUserIntoDB = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
     const name = payload === null || payload === void 0 ? void 0 : payload.name;
@@ -63,9 +64,9 @@ const signInFromDb = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     //   user?.password
     // );
     // console.log(isPasswordMatch);
-    // if (!isPasswordMatch) {
-    //   throw new AppError(httpStatus.FORBIDDEN, "Password don't match !!");
-    // }
+    if ((payload === null || payload === void 0 ? void 0 : payload.password) !== (user === null || user === void 0 ? void 0 : user.password)) {
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Password don't match !!");
+    }
     const userId = user === null || user === void 0 ? void 0 : user._id.toHexString();
     const userRole = user === null || user === void 0 ? void 0 : user.userRole;
     const jwtPayload = {
@@ -79,10 +80,48 @@ const signInFromDb = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     };
     //
 });
+// ! send mail for reseting password
+const resetMailLink = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const findUser = yield user_model_1.userModel
+        .findOne({ email })
+        .select(" name email role  ");
+    if (!findUser) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User don't exist !!");
+    }
+    if (findUser === null || findUser === void 0 ? void 0 : findUser.isDeleted) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User is deleted !!");
+    }
+    const userId = findUser === null || findUser === void 0 ? void 0 : findUser._id.toHexString();
+    const jwtPayload = {
+        userId,
+        userRole: findUser === null || findUser === void 0 ? void 0 : findUser.userRole,
+    };
+    const token = (0, auth_util_1.createToken)(jwtPayload, config_1.default.jwt_secret, "5m");
+    // const resetLink = `http://localhost:3000/ResetPassword/${token}`;
+    const resetLink = `https://techwisdom.vercel.app/ResetPassword/${token}`;
+    const sendMailResponse = yield (0, sendEmail_1.sendEmail)(resetLink, email);
+    return sendMailResponse;
+});
+// ! for reseting password
+const resetPasswordFromDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, password } = payload;
+    // ! check if  user exist
+    const user = yield user_model_1.userModel.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User dont exist !!! ");
+    }
+    if (user === null || user === void 0 ? void 0 : user.isDeleted) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User is deleted !!");
+    }
+    yield user_model_1.userModel.findByIdAndUpdate(userId, {
+        password
+    }, { new: true });
+    return null;
+});
 //
 exports.authServices = {
     createUserIntoDB,
     signInFromDb,
     createAdminIntoDb,
-    updateUser,
+    updateUser, resetMailLink, resetPasswordFromDb
 };

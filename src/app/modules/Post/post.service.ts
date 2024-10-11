@@ -3,7 +3,7 @@ import AppError from "../../Error/AppError";
 import { SendImageCloudinary } from "../../util/SendImageCloudinary";
 import { TPost } from "./post.interface";
 import { postModel } from "./post.model";
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose from "mongoose";
 import Querybuilder from "../../builder/Queryuilder";
 
 const postSearchableFields = ["title", "content"];
@@ -25,60 +25,80 @@ const cratePostInDb = async (payload: TPost, file: any) => {
 
 // ! for getting all post
 const getAllPostFromDb = async (query: Record<string, unknown>) => {
+  // console.log("from getting all post = " , query )
 
-  // console.log( 'in post services = ' ,  query)
-
-
-  let postQueryBuilder 
-  if(query?.type) {
-    postQueryBuilder = postModel.find({ category : query?.type }).sort( { upvotes: -1 } );
-  }
-
-  else{
+  let postQueryBuilder;
+  if (query?.type) {
+    postQueryBuilder = postModel
+      .find({ category: query?.type })
+      .sort({ upvotes: -1 });
+  } else {
     postQueryBuilder = postModel.find().sort({ upvotes: -1 });
   }
 
-  const postQuery = new Querybuilder(postQueryBuilder , query  ).search(postSearchableFields).sort()
+  const postQuery = new Querybuilder(postQueryBuilder, query)
+    .search(postSearchableFields)
+    .sort()
+    .pagination();
 
-  const resultModified = await postQuery?.queryModel.populate("authorId")
-  .populate("category")
-  .populate("comments");
+  const resultModified = await postQuery?.queryModel
+    .populate("authorId")
+    .populate("category")
+    .populate("comments");
   // console.log(resultModified)
-
-
-
 
   return resultModified;
 };
 
 // ! for getting user posts
-const getUserPostFromDb = async (userId: string , query: Record<string, unknown>) => {
-
-  console.log("in user post = " , query )
-
+const getUserPostFromDb = async (
+  userId: string,
+  query: Record<string, unknown>
+) => {
+  // console.log("in user post = ", query);
 
   const userPostQuery = postModel.find({ authorId: userId });
 
-  let postQueryBuilder 
-  if(query?.type) {
-    postQueryBuilder = userPostQuery.find({ category : query?.type }).sort( { upvotes: -1 } );
-  }
-  
-  else{
+  let postQueryBuilder;
+  if (query?.type) {
+    postQueryBuilder = userPostQuery
+      .find({ category: query?.type })
+      .sort({ upvotes: -1 });
+  } else {
     postQueryBuilder = userPostQuery.find().sort({ upvotes: -1 });
   }
 
-  const postQuery = new Querybuilder(postQueryBuilder , query  ).search(postSearchableFields).sort()
-  const resultModified = await postQuery?.queryModel.populate("category")
-
-
+  const postQuery = new Querybuilder(postQueryBuilder, query)
+    .search(postSearchableFields)
+    .sort();
+  const resultModified = await postQuery?.queryModel.populate("category");
 
   // const result = await postModel.find({ authorId: userId });
 
-
-
-
   return resultModified;
+};
+
+// ! for getting all user post count
+const getUserPostCount = async (userId: string) => {
+  const userPostQuery = await postModel.find({ authorId: userId });
+
+  const result = userPostQuery?.length;
+
+  return result;
+};
+
+// ! for getting all user post like count
+const getUserPostLikeCount = async (userId: string) => {
+  const userPost = await postModel.find({ authorId: userId });
+
+  return userPost;
+};
+
+// ! for getting all user post comment count
+const getUserPostCommentCount = async (userId: string) => {
+  const userPost = await postModel.find({ authorId: userId });
+
+  return userPost;
 };
 
 // ! for getting single category
@@ -158,8 +178,6 @@ const deletePostFromDb = async (id: string) => {
 
   return postData;
 };
-
-
 
 type TUpvoteDownvote = {
   postId: string;
@@ -271,4 +289,7 @@ export const postServices = {
   getUserPostFromDb,
   upvotePostInDb,
   downvotePostInDb,
+  getUserPostCount,
+  getUserPostLikeCount,
+  getUserPostCommentCount,
 };

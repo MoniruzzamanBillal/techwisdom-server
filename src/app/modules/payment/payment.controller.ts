@@ -4,7 +4,8 @@ import { subscriptionsModel } from "../Subscriptions/subscriptions.model";
 import { userModel } from "../user/user.model";
 import { paymentServices } from "./payment.service";
 
-const redirectURL = "http://localhost:3000";
+// const redirectURL = "http://localhost:3000";
+const redirectURL = "https://techwisdom.vercel.app";
 
 // ! for payment
 const procedePayment = catchAsync(async (req, res) => {
@@ -67,7 +68,7 @@ const verifyPayment = catchAsync(async (req, res) => {
 
 const cancelPayment = catchAsync(async (req, res) => {
   return res.redirect(
-    `${redirectURL}/dashboard/user/user-payment?paymentConfirmation=Failed`
+    `${redirectURL}`
   );
 });
 

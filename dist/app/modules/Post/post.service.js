@@ -32,15 +32,20 @@ const cratePostInDb = (payload, file) => __awaiter(void 0, void 0, void 0, funct
 });
 // ! for getting all post
 const getAllPostFromDb = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log( 'in post services = ' ,  query)
+    console.log("from getting all post = ", query);
     let postQueryBuilder;
     if (query === null || query === void 0 ? void 0 : query.type) {
-        postQueryBuilder = post_model_1.postModel.find({ category: query === null || query === void 0 ? void 0 : query.type }).sort({ upvotes: -1 });
+        postQueryBuilder = post_model_1.postModel
+            .find({ category: query === null || query === void 0 ? void 0 : query.type })
+            .sort({ upvotes: -1 });
     }
     else {
         postQueryBuilder = post_model_1.postModel.find().sort({ upvotes: -1 });
     }
-    const postQuery = new Queryuilder_1.default(postQueryBuilder, query).search(postSearchableFields).sort();
+    const postQuery = new Queryuilder_1.default(postQueryBuilder, query)
+        .search(postSearchableFields)
+        .sort()
+        .pagination();
     const resultModified = yield (postQuery === null || postQuery === void 0 ? void 0 : postQuery.queryModel.populate("authorId").populate("category").populate("comments"));
     // console.log(resultModified)
     return resultModified;
@@ -51,12 +56,16 @@ const getUserPostFromDb = (userId, query) => __awaiter(void 0, void 0, void 0, f
     const userPostQuery = post_model_1.postModel.find({ authorId: userId });
     let postQueryBuilder;
     if (query === null || query === void 0 ? void 0 : query.type) {
-        postQueryBuilder = userPostQuery.find({ category: query === null || query === void 0 ? void 0 : query.type }).sort({ upvotes: -1 });
+        postQueryBuilder = userPostQuery
+            .find({ category: query === null || query === void 0 ? void 0 : query.type })
+            .sort({ upvotes: -1 });
     }
     else {
         postQueryBuilder = userPostQuery.find().sort({ upvotes: -1 });
     }
-    const postQuery = new Queryuilder_1.default(postQueryBuilder, query).search(postSearchableFields).sort();
+    const postQuery = new Queryuilder_1.default(postQueryBuilder, query)
+        .search(postSearchableFields)
+        .sort();
     const resultModified = yield (postQuery === null || postQuery === void 0 ? void 0 : postQuery.queryModel.populate("category"));
     // const result = await postModel.find({ authorId: userId });
     return resultModified;

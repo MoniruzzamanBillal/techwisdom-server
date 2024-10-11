@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authController = void 0;
+const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../util/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../util/sendResponse"));
 const auth_service_1 = require("./auth.service");
@@ -69,10 +70,32 @@ const signIn = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
         token: token,
     });
 }));
+// !send reset link to mail
+const sendResetLink = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    const result = yield auth_service_1.authServices.resetMailLink((_b = req === null || req === void 0 ? void 0 : req.params) === null || _b === void 0 ? void 0 : _b.email);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Reset email sent successfully  ",
+        data: result,
+    });
+}));
+// ! for reseting password 
+const resetPassWord = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const result = yield auth_service_1.authServices.resetPasswordFromDb(req === null || req === void 0 ? void 0 : req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Password reset successfully  ",
+        data: { message: "success" },
+    });
+}));
 //
 exports.authController = {
     createUser,
     signIn,
     createAdminUser,
-    updateUser,
+    updateUser, sendResetLink, resetPassWord
 };
